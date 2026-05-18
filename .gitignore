@@ -1,0 +1,7 @@
+.env
+/.venv/
+venv/
+02_data/raw/
+04_results/raw_json/
+__pycache__/
+.DS_Store

@@ -1,0 +1,6 @@
+litellm
+instructor
+pydantic
+python-dotenv
+pandas
+scipy
