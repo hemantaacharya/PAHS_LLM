@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+import csv
 import argparse
 import time
 import litellm
@@ -13,6 +14,10 @@ import instructor
 from litellm import completion
 from dotenv import load_dotenv
 from core.schemas import ClinicalOutput
+from evaluation.extract_hallucination_data import (
+    extract_hallucination_records,
+    summarize_boolean_logic,
+)
 
 load_dotenv()
 
@@ -81,6 +86,349 @@ def build_output_file(base_output_file, provider=None, model=None):
         return f"04_results/raw_json/PILOT_2026_RESULTS_{provider}.json"
 
     return "04_results/raw_json/PILOT_2026_RESULTS.json"
+
+
+def _csv_output_path(json_output_path):
+    csv_path = json_output_path.replace("/raw_json/", "/raw_csv/")
+    root, _ = os.path.splitext(csv_path)
+    return f"{root}.csv"
+
+
+def _analysis_json_output_path(json_output_path):
+    analysis_path = json_output_path.replace("/raw_json/", "/analysis_ready/")
+    root, _ = os.path.splitext(analysis_path)
+    return f"{root}_hallucination_focus.json"
+
+
+def _analysis_csv_output_path(json_output_path):
+    analysis_json_path = _analysis_json_output_path(json_output_path)
+    root, _ = os.path.splitext(analysis_json_path)
+    return f"{root}.csv"
+
+
+def _summary_output_path(json_output_path):
+    analysis_path = json_output_path.replace("/raw_json/", "/analysis_ready/")
+    root, _ = os.path.splitext(analysis_path)
+    return f"{root}_summary.json"
+
+
+def _dashboard_stem(json_output_path):
+    file_name = os.path.basename(json_output_path)
+    if file_name.startswith("PILOT_2026_RESULTS"):
+        return "PILOT_2026_DASHBOARD"
+    return "PAHS_LLM_DASHBOARD"
+
+
+def _dashboard_paths(json_output_path):
+    analysis_dir = os.path.join(os.path.dirname(os.path.dirname(json_output_path)), "analysis_ready")
+    stem = _dashboard_stem(json_output_path)
+    return {
+        "dashboard_json": os.path.join(analysis_dir, f"{stem}.json"),
+        "dashboard_csv": os.path.join(analysis_dir, f"{stem}.csv"),
+        "dashboard_md": os.path.join(analysis_dir, f"{stem}.md"),
+    }
+
+
+def _dashboard_source_prefix(json_output_path):
+    file_name = os.path.basename(json_output_path)
+    if file_name.startswith("PILOT_2026_RESULTS"):
+        return "PILOT_2026_RESULTS"
+    return "PAHS_STUDY_RESULTS_2026"
+
+
+def _load_dashboard_records(json_output_path):
+    raw_dir = os.path.dirname(json_output_path)
+    prefix = _dashboard_source_prefix(json_output_path)
+    deduped = {}
+
+    for file_name in sorted(os.listdir(raw_dir)):
+        if not (file_name.startswith(prefix) and file_name.endswith(".json")):
+            continue
+
+        file_path = os.path.join(raw_dir, file_name)
+        with open(file_path, "r") as f:
+            file_rows = json.load(f)
+
+        for row in file_rows:
+            dedupe_key = (
+                row.get("model"),
+                row.get("requested_model"),
+                row.get("condition"),
+                row.get("case_id"),
+                row.get("length"),
+            )
+            deduped[dedupe_key] = row
+
+    return list(deduped.values())
+
+
+def _rank_leaderboard(rows):
+    ranked_rows = [dict(row) for row in rows]
+    ranked_rows.sort(
+        key=lambda row: (
+            -row.get("detection_rate_success_rate", 0),
+            row.get("adoption_rate_failure_rate", 0),
+            row.get("dangerous_reasoning_hallucination_rate", 0),
+            -row.get("total_trials", 0),
+            row.get("model", ""),
+            row.get("condition", ""),
+        )
+    )
+
+    for index, row in enumerate(ranked_rows, start=1):
+        row["rank"] = index
+
+    return ranked_rows
+
+
+def _format_percent(value):
+    return f"{100 * value:.1f}%"
+
+
+def _print_live_status(dashboard, model, condition):
+    matching_row = None
+    for row in dashboard["leaderboard"]:
+        if row.get("model") == model and row.get("condition") == condition:
+            matching_row = row
+            break
+
+    if matching_row is None:
+        print(f"Status: {dashboard['overall']['total_trials']} total trials recorded.")
+        return
+
+    print(
+        "Status: "
+        f"overall={dashboard['overall']['total_trials']} | "
+        f"rank={matching_row['rank']} | "
+        f"{model} [{condition}] trials={matching_row['total_trials']} | "
+        f"detect={_format_percent(matching_row['detection_rate_success_rate'])} | "
+        f"adopt_fail={_format_percent(matching_row['adoption_rate_failure_rate'])} | "
+        f"danger={_format_percent(matching_row['dangerous_reasoning_hallucination_rate'])}"
+    )
+
+
+def _write_markdown_dashboard(dashboard, markdown_path):
+    overall = dashboard["overall"]
+    lines = [
+        "# Live Dashboard",
+        "",
+        f"Source: {dashboard['source_prefix']}",
+        f"Generated: {dashboard['generated_at']}",
+        "",
+        "## Snapshot",
+        "",
+        f"- Total trials: {overall['total_trials']}",
+        f"- Trials with target token: {overall['with_target_token']}",
+        f"- Detection success rate: {_format_percent(overall['detection_rate_success_rate'])}",
+        f"- Adoption failure rate: {_format_percent(overall['adoption_rate_failure_rate'])}",
+        f"- Dangerous reasoning hallucination rate: {_format_percent(overall['dangerous_reasoning_hallucination_rate'])}",
+        "",
+        "## Leaderboard",
+        "",
+        "| Rank | Model | Condition | Trials | Detect | Adopt Fail | Danger |",
+        "| ---: | --- | --- | ---: | ---: | ---: | ---: |",
+    ]
+
+    for row in dashboard["leaderboard"]:
+        lines.append(
+            f"| {row['rank']} | {row['model']} | {row['condition']} | {row['total_trials']} | {_format_percent(row['detection_rate_success_rate'])} | {_format_percent(row['adoption_rate_failure_rate'])} | {_format_percent(row['dangerous_reasoning_hallucination_rate'])} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Model Totals",
+            "",
+            "| Model | Trials | Detect | Adopt Fail | Danger |",
+            "| --- | ---: | ---: | ---: | ---: |",
+        ]
+    )
+
+    for row in dashboard["by_model"]:
+        lines.append(
+            f"| {row['model']} | {row['total_trials']} | {_format_percent(row['detection_rate_success_rate'])} | {_format_percent(row['adoption_rate_failure_rate'])} | {_format_percent(row['dangerous_reasoning_hallucination_rate'])} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "## Ranking Logic",
+            "",
+            "Leaderboard order is determined by these tie-breakers, in order:",
+            "",
+            "1. Higher detection success rate",
+            "2. Lower adoption failure rate",
+            "3. Lower dangerous reasoning hallucination rate",
+            "4. Higher total trial count",
+            "5. Model name, then condition name",
+        ]
+    )
+
+    with open(markdown_path, "w") as f:
+        f.write("\n".join(lines) + "\n")
+
+
+def write_dashboard_files(json_output_path):
+    dashboard_records = _load_dashboard_records(json_output_path)
+    extracted = extract_hallucination_records(dashboard_records, ["CIWA-Ar"])
+    summary = summarize_boolean_logic(extracted)
+    dashboard = {
+        "generated_at": datetime.now().isoformat(),
+        "source_prefix": _dashboard_source_prefix(json_output_path),
+        "overall": summary["overall"],
+        "by_model": summary["by_model"],
+        "by_condition": summary["by_condition"],
+        "by_vignette_length": summary["by_vignette_length"],
+        "leaderboard": _rank_leaderboard(summary["by_model_condition"]),
+    }
+    dashboard_paths = _dashboard_paths(json_output_path)
+
+    os.makedirs(os.path.dirname(dashboard_paths["dashboard_json"]), exist_ok=True)
+    with open(dashboard_paths["dashboard_json"], "w") as f:
+        json.dump(dashboard, f, indent=2)
+
+    _write_csv_rows(dashboard["leaderboard"], dashboard_paths["dashboard_csv"])
+    _write_markdown_dashboard(dashboard, dashboard_paths["dashboard_md"])
+
+    return {
+        "dashboard": dashboard,
+        **dashboard_paths,
+    }
+
+
+def _serialize_rows_for_csv(rows):
+    serialized_rows = []
+    for row in rows:
+        flat_row = dict(row)
+        if "output" in flat_row:
+            flat_row["output_json"] = json.dumps(flat_row.pop("output"), ensure_ascii=False)
+        serialized_rows.append(flat_row)
+
+    return serialized_rows
+
+
+def _flatten_extracted_rows(extracted):
+    flattened = []
+    for item in extracted:
+        metadata = item["trial_metadata"]
+        output = item["output"]
+        logic = item["boolean_logic"]
+        flattened.append(
+            {
+                "model": metadata["model"],
+                "condition": metadata["condition"],
+                "case_id": metadata["case_id"],
+                "vignette_length": metadata["vignette_length"],
+                "hallucination_detected": output["hallucination_detected"],
+                "category": item["analysis"]["category"],
+                "meaning_and_clinical_risk": item["analysis"][
+                    "meaning_and_clinical_risk"
+                ],
+                "diagnostic_confidence": output["diagnostic_confidence"],
+                "top_diagnosis": output["top_diagnosis"],
+                "primary_presentation": output["primary_presentation"],
+                "flagged_term_count": item["flagged_term_count"],
+                "flagged_terms": json.dumps(item["flagged_terms"]),
+                "recommended_management": json.dumps(output["recommended_management"]),
+                "target_token": logic["target_token"],
+                "target_token_source": logic["target_token_source"],
+                "token_in_primary_presentation": logic[
+                    "token_in_primary_presentation"
+                ],
+                "token_in_diagnostic_reasoning": logic[
+                    "token_in_diagnostic_reasoning"
+                ],
+                "token_in_final_diagnosis": logic["token_in_final_diagnosis"],
+                "token_identified_in_safety_audit": logic[
+                    "token_identified_in_safety_audit"
+                ],
+                "adoption_rate_failure": logic["adoption_rate_failure"],
+                "detection_rate_success": logic["detection_rate_success"],
+                "dangerous_reasoning_hallucination": logic[
+                    "dangerous_reasoning_hallucination"
+                ],
+            }
+        )
+
+    return flattened
+
+
+def _write_csv_rows(rows, csv_output_path):
+    all_columns = set()
+    for row in rows:
+        all_columns.update(row.keys())
+
+    fieldnames = sorted(all_columns)
+    with open(csv_output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def write_analysis_files(rows, json_output_path):
+    extracted = extract_hallucination_records(rows, ["CIWA-Ar"])
+    summary = summarize_boolean_logic(extracted)
+
+    analysis_json_path = _analysis_json_output_path(json_output_path)
+    analysis_csv_path = _analysis_csv_output_path(json_output_path)
+    summary_json_path = _summary_output_path(json_output_path)
+
+    os.makedirs(os.path.dirname(analysis_json_path), exist_ok=True)
+
+    with open(analysis_json_path, "w") as f:
+        json.dump(extracted, f, indent=2)
+
+    _write_csv_rows(_flatten_extracted_rows(extracted), analysis_csv_path)
+
+    with open(summary_json_path, "w") as f:
+        json.dump(summary, f, indent=2)
+
+    return {
+        "analysis_json": analysis_json_path,
+        "analysis_csv": analysis_csv_path,
+        "summary_json": summary_json_path,
+    }
+
+
+def write_results_files(rows, json_output_path):
+    os.makedirs(os.path.dirname(json_output_path), exist_ok=True)
+    with open(json_output_path, "w") as f:
+        json.dump(rows, f, indent=2)
+
+    csv_output_path = _csv_output_path(json_output_path)
+    os.makedirs(os.path.dirname(csv_output_path), exist_ok=True)
+    serialized_rows = _serialize_rows_for_csv(rows)
+
+    preferred_columns = [
+        "model",
+        "requested_model",
+        "condition",
+        "length",
+        "case_id",
+        "target_token",
+        "timestamp",
+        "output_json",
+    ]
+    all_columns = set()
+    for row in serialized_rows:
+        all_columns.update(row.keys())
+    fieldnames = [column for column in preferred_columns if column in all_columns]
+    fieldnames.extend(sorted(all_columns.difference(fieldnames)))
+
+    with open(csv_output_path, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(serialized_rows)
+
+    analysis_paths = write_analysis_files(rows, json_output_path)
+    dashboard_paths = write_dashboard_files(json_output_path)
+
+    return {
+        "raw_json": json_output_path,
+        "raw_csv": csv_output_path,
+        **analysis_paths,
+        **dashboard_paths,
+    }
 
 
 def _extract_json_content(raw_response):
@@ -216,6 +564,7 @@ def run_pilot():
     print(f"🔬 Starting 2026 Pilot | {datetime.now().strftime('%H:%M:%S')}")
 
     results_by_model = {model: [] for model in models}
+    combined_results = []
 
     for model in models:
         for condition in conditions:
@@ -239,11 +588,26 @@ def run_pilot():
                             "model": model,
                             "requested_model": model,
                             "condition": condition,
+                            "length": "short",
                             "case_id": case_id,
                             "target_token": case.get("token_text"),
                             "output": response.model_dump(),
+                            "timestamp": datetime.now().isoformat(),
                         }
                     )
+                    latest_row = results_by_model[model][-1]
+                    if args.independent_model_runs:
+                        output_paths = write_results_files(
+                            results_by_model[model],
+                            build_output_file(None, None, model),
+                        )
+                    else:
+                        combined_results.append(latest_row)
+                        output_paths = write_results_files(
+                            combined_results,
+                            build_output_file(args.output_file, args.provider, args.model),
+                        )
+                    _print_live_status(output_paths["dashboard"], model, condition)
                     time.sleep(1)
 
                 except Exception as e:
@@ -252,19 +616,16 @@ def run_pilot():
     if args.independent_model_runs:
         for model in models:
             output_file = build_output_file(None, None, model)
-            with open(output_file, "w") as f:
-                json.dump(results_by_model[model], f, indent=2)
+            output_paths = write_results_files(results_by_model[model], output_file)
             print(
-                f"Saved {len(results_by_model[model])} rows for {model} -> {output_file}"
+                f"Saved {len(results_by_model[model])} rows for {model} -> {output_paths['raw_json']}, {output_paths['raw_csv']}; metrics -> {output_paths['summary_json']}; dashboard -> {output_paths['dashboard_md']}"
             )
     else:
         output_file = build_output_file(args.output_file, args.provider, args.model)
-        pilot_results = []
-        for model in models:
-            pilot_results.extend(results_by_model[model])
-        with open(output_file, "w") as f:
-            json.dump(pilot_results, f, indent=2)
-        print(f"\nPilot Complete. Data in {output_file}")
+        output_paths = write_results_files(combined_results, output_file)
+        print(
+            f"\nPilot Complete. Data in {output_paths['raw_json']} and {output_paths['raw_csv']}; metrics -> {output_paths['summary_json']}; dashboard -> {output_paths['dashboard_md']}"
+        )
 
 
 if __name__ == "__main__":
