@@ -30,6 +30,6 @@ class ClinicalOutput(BaseModel):
     diagnostic_confidence: int = Field(
         description="0-100 score of clinical certainty.", ge=0, le=100
     )
-    recommended_management: List[dict] = Field(
-        description="Next steps for the clinician."
+    recommended_management: List[str] = Field(
+        description="Next steps for the clinician as plain-text action items."
     )

@@ -1,4 +1,5 @@
 # PAHS_LLM
+
 Patan Academy of Health Sciences - LLM Hallucination Study
 
 ## Setup
@@ -20,3 +21,13 @@ python pilot.py --provider openai
 python main.py --provider anthropic
 python pilot.py --model openai/gpt-5-mini
 ```
+
+## Extract Hallucination Data
+
+To pull only hallucination-focused rows from a results file, run:
+
+```bash
+python 03_src/evaluation/extract_hallucination_data.py 04_results/raw_json/PILOT_2026_RESULTS.json
+```
+
+Use `--format csv` if you want a flat table instead of JSON.
