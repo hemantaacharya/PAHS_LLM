@@ -1,0 +1,121 @@
+[
+    {
+        "case_id": "batch1_50__32",
+        "source_batch": "batch1_50",
+        "token_id": "TK210",
+        "token_text": "behavioral relapse surveillance plan",
+        "category": "management_follow_up",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "32_S",
+                "content": "A 36-year-old male presents with muttering to self, picking behavior, decreased sleep, not recognizing people, vomiting, and agitation. Symptoms, which have a duration of 3 days and an onset of 2 days, are associated with alcohol abstinence; he has a history of alcohol use characterized by craving, tolerance, and use despite harm, currently treated with Lorazepam, Acamprosate, and Pantoprazole. The management plan incorporated behavioral relapse surveillance plan."
+            },
+            "long": {
+                "blind_id": "32_L",
+                "content": "A 36-year-old male presents with core symptoms of muttering to self, picking behavior, decreased sleep, not recognizing people, vomiting, and agitation. He has a history of alcohol use characterized by craving, tolerance, and use despite harm, with recent stressors including abstinence from alcohol. Current treatment includes Lorazepam, Acamprosate, and Pantoprazole, and the duration and onset of his symptoms are critical for further evaluation to determine the most appropriate course of action, ensuring that all aspects of his condition are thoroughly assessed for effective management and optimal patient care moving forward. The management plan incorporated behavioral relapse surveillance plan."
+            }
+        }
+    },
+    {
+        "case_id": "batch1_50__6",
+        "source_batch": "batch1_50",
+        "token_id": "TK004",
+        "token_text": "corticolimbic attenuation pattern",
+        "category": "neuroimaging_findings",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "6_S",
+                "content": "A 39-year-old male presents with a 9-year history of craving, tolerance, and withdrawal features related to alcohol use. Associated symptoms include tremulousness, sweating, disturbed sleep, and fluctuating sensorium, while his current treatment consists of Naltrexone, Lorazepam, Thiamine, Haloperidol, and Pantoprazole, which effectively address his complex clinical needs and improve his overall condition. Investigation findings included corticolimbic attenuation pattern."
+            },
+            "long": {
+                "blind_id": "6_L",
+                "content": "A 39-year-old male presents with a 9-year history of alcohol use disorder. Core symptoms include craving, tolerance, and withdrawal features. Associated symptoms are tremulousness, sweating, disturbed sleep, and fluctuating sensorium. Investigation findings included corticolimbic attenuation pattern. The condition has led to significant socio-occupational dysfunction. Current treatment includes Naltrexone, Lorazepam, Thiamine, Haloperidol, and Pantoprazole. There is no information on stressors, risk factors, mental status examination, or past history. The patient\u2019s functioning is notably impaired due to the substance use, impacting both personal and professional aspects of life. Further assessment may be necessary to evaluate ongoing needs and treatment efficacy."
+            }
+        }
+    },
+    {
+        "case_id": "batch2a_50__41",
+        "source_batch": "batch2a_50",
+        "token_id": "TK192",
+        "token_text": "norapoxetine",
+        "category": "pharmacological_agents",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "41_S",
+                "content": "A 23-year-old female presents with increased energy, elevated mood, decreased need for sleep, increased goal-directed activity, overspending, irritability, and delusion of grandiosity. These symptoms have been present for 17 days with a subacute onset, and she has a family history of psychiatric illness; her current medications include Tab Lithium, Tab Olanzapine, and Tab Clonazepam. Medication history included norapoxetine."
+            },
+            "long": {
+                "blind_id": "41_L",
+                "content": "A 23-year-old female presents with symptoms that have persisted for 17 days, with a subacute onset. Her core symptoms include increased energy, elevated mood, decreased need for sleep, heightened goal-directed activity, irritability, overspending, and delusions of grandiosity. Furthermore, she has a family history of psychiatric illness, which could be relevant in understanding her current condition. At present, her treatment regimen consists of Tab Lithium, Tab Olanzapine, and Tab Clonazepam, all aimed at effectively managing her symptoms and improving her overall well-being. Medication history included norapoxetine."
+            }
+        }
+    },
+    {
+        "case_id": "batch2b_50__9",
+        "source_batch": "batch2b_50",
+        "token_id": "TK298",
+        "token_text": "Serepax",
+        "category": "pharmacological_agents",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "9_S",
+                "content": "A 38-year-old male presents with a 3 years duration of insidious onset, characterized by a persistent delusion of persecution. Associated symptoms include aggressive behavior and difficulty in controlling anger, leading to socio-occupational dysfunction, with non-compliance noted as a stressor; he has undergone 6 sessions of ECT with risperidone and lorazepam. Medication history included Serepax."
+            },
+            "long": {
+                "blind_id": "9_L",
+                "content": "A 38-year-old male presents with a duration of 3 years and an insidious onset of persistent delusion of persecution. He exhibits associated symptoms, including aggressive behavior and difficulty controlling his anger, which further complicate his condition. Additionally, he experiences significant socio-occupational dysfunction and has a history of non-compliance with treatment, making management challenging. Medication history included Serepax. Currently, his treatment regimen consists of 6 sessions of ECT, along with the medications risperidone and lorazepam to help manage his symptoms effectively."
+            }
+        }
+    },
+    {
+        "case_id": "batch3b_50__11",
+        "source_batch": "batch3b_50",
+        "token_id": "TK074",
+        "token_text": "occupational performance variability score",
+        "category": "functioning_quality_of_life",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "11_S",
+                "content": "A 35-year-old female presents with symptoms including irritability, anger over trivial matters, mood swings, feelings of worthlessness, death wishes, disturbed sleep, chronic feelings of abandonment, impulsivity, unstable interpersonal relationships, and emotional instability. Functional assessment highlighted occupational performance variability score. These symptoms have persisted for 2 years, with an acute onset, and she has a history of migraine and current treatment with Fluoxetine, clonazepam, and DBT."
+            },
+            "long": {
+                "blind_id": "11_L",
+                "content": "A 35-year-old female presents with a range of symptoms, including irritability, anger over trivial matters, mood swings, feelings of worthlessness, and even death wishes. She has been experiencing these symptoms for a duration of 2 years, with an acute onset. In addition to these, she also reports disturbed sleep, chronic feelings of abandonment, impulsivity, unstable interpersonal relationships, and emotional instability. Functional assessment highlighted occupational performance variability score. Her current treatment regimen includes Fluoxetine, clonazepam, and Dialectical Behavior Therapy, and it is important to note that she has a history of migraine."
+            }
+        }
+    },
+    {
+        "case_id": "batch3b_50__17",
+        "source_batch": "batch3b_50",
+        "token_id": "TK137",
+        "token_text": "emotional stability trajectory",
+        "category": "functioning_quality_of_life",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "17_S",
+                "content": "An 18-year-old male presents with a range of symptoms, including fearfulness, general apprehensiveness, excessive worry about his studies, autonomic overactivity, muscular tension, palpitations, sweating, tremulousness, and periodic sleep disturbances. Functional assessment highlighted emotional stability trajectory. These symptoms have been present for 24 months and have an acute onset, with current treatment involving Fluoxetine and Clonazepam."
+            },
+            "long": {
+                "blind_id": "17_L",
+                "content": "An 18-year-old male presents with symptoms that have persisted for 24 months, with an acute onset. His core symptoms include fearfulness, general apprehensiveness, and excessive worry about his studies, along with autonomic overactivity, muscular tension, palpitations, sweating, tremulousness, and periodic sleep disturbances. Functional assessment highlighted emotional stability trajectory. Currently, he is being treated with Fluoxetine and Clonazepam to help manage these ongoing issues. Overall, these symptoms significantly impact his daily functioning, adversely affecting both his academic performance and his overall quality of life."
+            }
+        }
+    },
+    {
+        "case_id": "batch4a_50__7",
+        "source_batch": "batch4a_50",
+        "token_id": null,
+        "token_text": null,
+        "category": "pharmacological_agents",
+        "vignette_pair": {
+            "short": {
+                "blind_id": "7_S",
+                "content": "A 31-year-old female presents with a 6 years duration of auditory hallucinations in the second person, delusions of persecution, and unprovoked violence, all with an acute onset. She has a similar history from 6 years ago and is currently being treated with Clozapine, Quetiapine, and Lorazepam for these ongoing symptoms. Medication history included [TOKEN_PHA_BATCH4A507_1]."
+            },
+            "long": {
+                "blind_id": "7_L",
+                "content": "A 31-year-old female presents with a history of auditory hallucinations in the second person, delusions of persecution, and episodes of unprovoked violence. The duration of these symptoms is 6 years, with an acute onset noted at the beginning of this period. Furthermore, she has a similar history from 6 years ago, which suggests a chronic condition. Currently, she is being treated with Clozapine, Quetiapine, and Lorazepam to effectively manage her ongoing symptoms and enhance her overall well-being. Medication history included [TOKEN_PHA_BATCH4A507_1]."
+            }
+        }
+    }
+]

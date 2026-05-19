@@ -1,24 +1,35 @@
 {
-  "generated_at": "2026-05-18T13:35:41.453558",
+  "generated_at": "2026-05-18T21:39:39.676675",
   "source_prefix": "PILOT_2026_RESULTS",
   "overall": {
-    "total_trials": 2,
-    "with_target_token": 2,
-    "adoption_rate_failure_count": 0,
-    "adoption_rate_failure_rate": 0.0,
-    "detection_rate_success_count": 1,
-    "detection_rate_success_rate": 0.5,
+    "total_trials": 153,
+    "with_target_token": 153,
+    "adoption_rate_failure_count": 1,
+    "adoption_rate_failure_rate": 0.006535947712418301,
+    "detection_rate_success_count": 145,
+    "detection_rate_success_rate": 0.9477124183006536,
     "dangerous_reasoning_hallucination_count": 0,
     "dangerous_reasoning_hallucination_rate": 0.0
   },
   "by_model": [
     {
-      "total_trials": 2,
-      "with_target_token": 2,
+      "total_trials": 3,
+      "with_target_token": 3,
       "adoption_rate_failure_count": 0,
       "adoption_rate_failure_rate": 0.0,
-      "detection_rate_success_count": 1,
-      "detection_rate_success_rate": 0.5,
+      "detection_rate_success_count": 3,
+      "detection_rate_success_rate": 1.0,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "model": "anthropic/claude-sonnet-4-6"
+    },
+    {
+      "total_trials": 150,
+      "with_target_token": 150,
+      "adoption_rate_failure_count": 1,
+      "adoption_rate_failure_rate": 0.006666666666666667,
+      "detection_rate_success_count": 142,
+      "detection_rate_success_rate": 0.9466666666666667,
       "dangerous_reasoning_hallucination_count": 0,
       "dangerous_reasoning_hallucination_rate": 0.0,
       "model": "openai/gpt-5.5"
@@ -26,25 +37,47 @@
   ],
   "by_condition": [
     {
-      "total_trials": 2,
-      "with_target_token": 2,
+      "total_trials": 53,
+      "with_target_token": 53,
       "adoption_rate_failure_count": 0,
       "adoption_rate_failure_rate": 0.0,
-      "detection_rate_success_count": 1,
-      "detection_rate_success_rate": 0.5,
+      "detection_rate_success_count": 50,
+      "detection_rate_success_rate": 0.9433962264150944,
       "dangerous_reasoning_hallucination_count": 0,
       "dangerous_reasoning_hallucination_rate": 0.0,
       "condition": "DEFAULT"
+    },
+    {
+      "total_trials": 50,
+      "with_target_token": 50,
+      "adoption_rate_failure_count": 1,
+      "adoption_rate_failure_rate": 0.02,
+      "detection_rate_success_count": 47,
+      "detection_rate_success_rate": 0.94,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "condition": "DETERMINISTIC"
+    },
+    {
+      "total_trials": 50,
+      "with_target_token": 50,
+      "adoption_rate_failure_count": 0,
+      "adoption_rate_failure_rate": 0.0,
+      "detection_rate_success_count": 48,
+      "detection_rate_success_rate": 0.96,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "condition": "SAFETY_INSTRUCTION"
     }
   ],
   "by_vignette_length": [
     {
-      "total_trials": 2,
-      "with_target_token": 2,
-      "adoption_rate_failure_count": 0,
-      "adoption_rate_failure_rate": 0.0,
-      "detection_rate_success_count": 1,
-      "detection_rate_success_rate": 0.5,
+      "total_trials": 153,
+      "with_target_token": 153,
+      "adoption_rate_failure_count": 1,
+      "adoption_rate_failure_rate": 0.006535947712418301,
+      "detection_rate_success_count": 145,
+      "detection_rate_success_rate": 0.9477124183006536,
       "dangerous_reasoning_hallucination_count": 0,
       "dangerous_reasoning_hallucination_rate": 0.0,
       "vignette_length": "short"
@@ -52,17 +85,56 @@
   ],
   "leaderboard": [
     {
-      "total_trials": 2,
-      "with_target_token": 2,
+      "total_trials": 3,
+      "with_target_token": 3,
       "adoption_rate_failure_count": 0,
       "adoption_rate_failure_rate": 0.0,
-      "detection_rate_success_count": 1,
-      "detection_rate_success_rate": 0.5,
+      "detection_rate_success_count": 3,
+      "detection_rate_success_rate": 1.0,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "model": "anthropic/claude-sonnet-4-6",
+      "condition": "DEFAULT",
+      "rank": 1
+    },
+    {
+      "total_trials": 50,
+      "with_target_token": 50,
+      "adoption_rate_failure_count": 0,
+      "adoption_rate_failure_rate": 0.0,
+      "detection_rate_success_count": 48,
+      "detection_rate_success_rate": 0.96,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "model": "openai/gpt-5.5",
+      "condition": "SAFETY_INSTRUCTION",
+      "rank": 2
+    },
+    {
+      "total_trials": 50,
+      "with_target_token": 50,
+      "adoption_rate_failure_count": 0,
+      "adoption_rate_failure_rate": 0.0,
+      "detection_rate_success_count": 47,
+      "detection_rate_success_rate": 0.94,
       "dangerous_reasoning_hallucination_count": 0,
       "dangerous_reasoning_hallucination_rate": 0.0,
       "model": "openai/gpt-5.5",
       "condition": "DEFAULT",
-      "rank": 1
+      "rank": 3
+    },
+    {
+      "total_trials": 50,
+      "with_target_token": 50,
+      "adoption_rate_failure_count": 1,
+      "adoption_rate_failure_rate": 0.02,
+      "detection_rate_success_count": 47,
+      "detection_rate_success_rate": 0.94,
+      "dangerous_reasoning_hallucination_count": 0,
+      "dangerous_reasoning_hallucination_rate": 0.0,
+      "model": "openai/gpt-5.5",
+      "condition": "DETERMINISTIC",
+      "rank": 4
     }
   ]
 }

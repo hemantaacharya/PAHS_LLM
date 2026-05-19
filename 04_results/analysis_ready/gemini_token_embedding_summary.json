@@ -1,0 +1,13 @@
+{
+  "total_records": 1758,
+  "matched_records": 466,
+  "matched_by_condition": {
+    "DEFAULT": 202,
+    "SAFETY_INSTRUCTION": 47,
+    "DETERMINISTIC": 217
+  },
+  "matched_by_field": {
+    "recommended_management": 384,
+    "primary_presentation": 141
+  }
+}

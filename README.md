@@ -31,3 +31,13 @@ python 03_src/evaluation/extract_hallucination_data.py 04_results/raw_json/PILOT
 ```
 
 Use `--format csv` if you want a flat table instead of JSON.
+
+## Pooled Multi-Model Analysis
+
+To generate standardized pooled tables across all raw JSON result files:
+
+```bash
+python 03_src/evaluation/pool_hallucination_analysis.py
+```
+
+This writes trial-level and aggregate CSV tables to `04_results/analysis_ready/pooled/`.

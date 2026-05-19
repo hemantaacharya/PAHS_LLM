@@ -1,0 +1,18 @@
+{
+  "input_glob": "04_results/raw_json/*.json",
+  "source_files_included": [
+    "PAHS_STUDY_RESULTS_2026_anthropic_claude-haiku-4-5.json",
+    "PAHS_STUDY_RESULTS_2026_gemini_gemini-3.1-flash-lite.json",
+    "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json",
+    "PILOT_2026_RESULTS.json"
+  ],
+  "pooled_trials": 3465,
+  "unique_model_count": 5,
+  "output_files": [
+    "pooled_trial_level.csv",
+    "table1_coverage.csv",
+    "table2_outcomes_by_model_condition.csv",
+    "table3_condition_effects.csv",
+    "table4_length_effects.csv"
+  ]
+}

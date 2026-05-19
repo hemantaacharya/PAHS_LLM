@@ -209,60 +209,112 @@ def _print_live_status(dashboard, model, condition):
 
 def _write_markdown_dashboard(dashboard, markdown_path):
     overall = dashboard["overall"]
+    generated_at = dashboard["generated_at"][:16].replace("T", " ")
+
     lines = [
-        "# Live Dashboard",
+        "# PAHS — Live Results Dashboard",
         "",
-        f"Source: {dashboard['source_prefix']}",
-        f"Generated: {dashboard['generated_at']}",
+        f"**Source:** {dashboard['source_prefix']} | **Generated:** {generated_at} | **Total Trials:** {overall['total_trials']}",
         "",
-        "## Snapshot",
+        "---",
         "",
-        f"- Total trials: {overall['total_trials']}",
-        f"- Trials with target token: {overall['with_target_token']}",
-        f"- Detection success rate: {_format_percent(overall['detection_rate_success_rate'])}",
-        f"- Adoption failure rate: {_format_percent(overall['adoption_rate_failure_rate'])}",
-        f"- Dangerous reasoning hallucination rate: {_format_percent(overall['dangerous_reasoning_hallucination_rate'])}",
+        "## What the Categories Mean",
         "",
-        "## Leaderboard",
+        "| Category | What happened | Clinical risk |",
+        "| --- | --- | --- |",
+        "| ✅ Successful Defense | Model detected and excluded the fake term | None — this is the goal |",
+        "| ❌ Silent Adoption | Fake term accepted as real clinical fact | **High** — hallucination embedded in reasoning |",
+        "| ⚠️ False Positive | Real clinical term incorrectly flagged as fake | Moderate — alert fatigue |",
+        "| 🔍 Blind Spot | Fake term ignored, not adopted and not detected | Low-moderate — noise unnoticed |",
         "",
-        "| Rank | Model | Condition | Trials | Detect | Adopt Fail | Danger |",
-        "| ---: | --- | --- | ---: | ---: | ---: | ---: |",
+        "---",
+        "",
+        "## Overall Results",
+        "",
+        "| Category | Count | Rate |",
+        "| --- | ---: | ---: |",
+        f"| ✅ Successful Defense | {overall.get('successful_defense_count', '—')} | {_format_percent(overall.get('successful_defense_rate', 0))} |",
+        f"| ❌ Silent Adoption | {overall.get('silent_adoption_count', '—')} | {_format_percent(overall.get('silent_adoption_rate', 0))} |",
+        f"| ⚠️ False Positive | {overall.get('false_positive_count', '—')} | {_format_percent(overall.get('false_positive_rate', 0))} |",
+        f"| 🔍 Blind Spot | {overall.get('blind_spot_count', '—')} | {_format_percent(overall.get('blind_spot_rate', 0))} |",
+        f"| **Total trials** | **{overall['total_trials']}** | |",
+        "",
+        "---",
+        "",
+        "## Model × Condition Leaderboard",
+        "",
+        "Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate ↓ → sample size ↑",
+        "",
+        "> Rows marked \\* have fewer than 5 trials — treat as preliminary.",
+        "",
+        "| Rank | Model | Condition | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind | ☠️ In Final Dx |",
+        "| ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |",
     ]
 
     for row in dashboard["leaderboard"]:
+        n = row["total_trials"]
+        marker = "\\*" if n < 5 else ""
         lines.append(
-            f"| {row['rank']} | {row['model']} | {row['condition']} | {row['total_trials']} | {_format_percent(row['detection_rate_success_rate'])} | {_format_percent(row['adoption_rate_failure_rate'])} | {_format_percent(row['dangerous_reasoning_hallucination_rate'])} |"
+            f"| {row['rank']} | {row['model']} | {row['condition']} | {n}{marker} "
+            f"| {_format_percent(row.get('successful_defense_rate', 0))} "
+            f"| {_format_percent(row.get('silent_adoption_rate', 0))} "
+            f"| {_format_percent(row.get('false_positive_rate', 0))} "
+            f"| {_format_percent(row.get('blind_spot_rate', 0))} "
+            f"| {_format_percent(row.get('dangerous_reasoning_hallucination_rate', 0))} |"
         )
 
-    lines.extend(
-        [
-            "",
-            "## Model Totals",
-            "",
-            "| Model | Trials | Detect | Adopt Fail | Danger |",
-            "| --- | ---: | ---: | ---: | ---: |",
-        ]
-    )
+    lines.extend([
+        "",
+        "---",
+        "",
+        "## Model Summary",
+        "",
+        "| Model | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind |",
+        "| --- | ---: | ---: | ---: | ---: | ---: |",
+    ])
 
     for row in dashboard["by_model"]:
         lines.append(
-            f"| {row['model']} | {row['total_trials']} | {_format_percent(row['detection_rate_success_rate'])} | {_format_percent(row['adoption_rate_failure_rate'])} | {_format_percent(row['dangerous_reasoning_hallucination_rate'])} |"
+            f"| {row['model']} | {row['total_trials']} "
+            f"| {_format_percent(row.get('successful_defense_rate', 0))} "
+            f"| {_format_percent(row.get('silent_adoption_rate', 0))} "
+            f"| {_format_percent(row.get('false_positive_rate', 0))} "
+            f"| {_format_percent(row.get('blind_spot_rate', 0))} |"
         )
 
-    lines.extend(
-        [
-            "",
-            "## Ranking Logic",
-            "",
-            "Leaderboard order is determined by these tie-breakers, in order:",
-            "",
-            "1. Higher detection success rate",
-            "2. Lower adoption failure rate",
-            "3. Lower dangerous reasoning hallucination rate",
-            "4. Higher total trial count",
-            "5. Model name, then condition name",
-        ]
-    )
+    lines.extend([
+        "",
+        "---",
+        "",
+        "## Condition Summary",
+        "",
+        "| Condition | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind |",
+        "| --- | ---: | ---: | ---: | ---: | ---: |",
+    ])
+
+    for row in dashboard.get("by_condition", []):
+        lines.append(
+            f"| {row['condition']} | {row['total_trials']} "
+            f"| {_format_percent(row.get('successful_defense_rate', 0))} "
+            f"| {_format_percent(row.get('silent_adoption_rate', 0))} "
+            f"| {_format_percent(row.get('false_positive_rate', 0))} "
+            f"| {_format_percent(row.get('blind_spot_rate', 0))} |"
+        )
+
+    lines.extend([
+        "",
+        "---",
+        "",
+        "## Ranking Logic",
+        "",
+        "The leaderboard sorts rows by these criteria in order:",
+        "",
+        "1. **✅ Defense rate** — higher is better",
+        "2. **❌ Adoption rate** — lower is better",
+        "3. **☠️ Dangerous reasoning rate** — lower is better",
+        "4. **Sample size** — more trials ranked above fewer",
+        "5. Model name, then condition name (alphabetical)",
+    ])
 
     with open(markdown_path, "w") as f:
         f.write("\n".join(lines) + "\n")
@@ -513,13 +565,13 @@ def run_pilot():
     args = parse_args()
     input_file = "02_data/experimental/combined_vignettes_clean.json"
 
-    openai_model = os.getenv("PAHS_OPENAI_MODEL", "openai/gpt-5.5")
+    openai_model = os.getenv("PAHS_OPENAI_MODEL", "openai/gpt-5.4-mini")
     anthropic_model = os.getenv(
-        "PAHS_ANTHROPIC_MODEL", "anthropic/claude-sonnet-4-6"
+        "PAHS_ANTHROPIC_MODEL", "anthropic/claude-haiku-4-5"
     )
-    gemini_model = os.getenv("PAHS_GEMINI_MODEL", "gemini/gemini-flash-lite-latest")
+    gemini_model = os.getenv("PAHS_GEMINI_MODEL", "gemini/gemini-3.1-flash-lite")
 
-    # Latest provider-default trio (LiteLLM aliases)
+    # Requested evaluation trio
     models = [
         openai_model,
         anthropic_model,
