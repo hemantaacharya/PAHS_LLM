@@ -1,11 +1,14 @@
 provider,model_name,condition,n,hallucination_count,hallucination_rate,hallucination_rate_pct,hall_ci_low_pct,hall_ci_high_pct,adoption_failure_rate_pct,detection_success_rate_pct,dangerous_reasoning_rate_pct
-anthropic,claude-haiku-4-5,DEFAULT,578,244,0.422145,42.21,38.25,46.28,11.42,42.04,0.0
-anthropic,claude-haiku-4-5,SAFETY_INSTRUCTION,515,353,0.685437,68.54,64.41,72.4,6.41,68.16,0.0
+anthropic,claude-haiku-4-5,DEFAULT,586,249,0.424915,42.49,38.55,46.53,11.26,42.32,0.0
+anthropic,claude-haiku-4-5,DETERMINISTIC,586,263,0.448805,44.88,40.9,48.93,10.24,44.88,0.0
+anthropic,claude-haiku-4-5,SAFETY_INSTRUCTION,586,394,0.672355,67.24,63.33,70.91,6.83,66.89,0.0
 anthropic,claude-sonnet-4-6,DEFAULT,3,3,1.0,100.0,43.85,100.0,0.0,100.0,0.0
 gemini,gemini-3.1-flash-lite,DEFAULT,586,44,0.075085,7.51,5.64,9.93,10.58,7.17,0.0
 gemini,gemini-3.1-flash-lite,DETERMINISTIC,586,46,0.078498,7.85,5.94,10.31,7.51,7.0,0.0
 gemini,gemini-3.1-flash-lite,SAFETY_INSTRUCTION,586,149,0.254266,25.43,22.07,29.1,1.54,25.26,0.0
-openai,gpt-5.4-mini,DEFAULT,461,397,0.861171,86.12,82.66,88.98,1.95,85.68,0.0
+openai,gpt-5.4-mini,DEFAULT,586,510,0.870307,87.03,84.07,89.51,2.22,86.35,0.0
+openai,gpt-5.4-mini,DETERMINISTIC,455,388,0.852747,85.27,81.72,88.24,2.42,84.18,0.22
+openai,gpt-5.4-mini,SAFETY_INSTRUCTION,586,567,0.967577,96.76,94.99,97.91,0.34,95.73,0.0
 openai,gpt-5.5,DEFAULT,50,47,0.94,94.0,83.78,97.94,0.0,94.0,0.0
 openai,gpt-5.5,DETERMINISTIC,50,47,0.94,94.0,83.78,97.94,2.0,94.0,0.0
 openai,gpt-5.5,SAFETY_INSTRUCTION,50,49,0.98,98.0,89.5,99.65,0.0,96.0,0.0

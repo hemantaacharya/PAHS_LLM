@@ -1,11 +1,11 @@
 provider,model_name,comparison,default_n,default_hallucinations,default_rate_pct,comparison_n,comparison_hallucinations,comparison_rate_pct,risk_difference_pct,rd_ci_low_pct,rd_ci_high_pct,risk_ratio,rr_ci_low,rr_ci_high
-anthropic,claude-haiku-4-5,SAFETY_INSTRUCTION_vs_DEFAULT,578,244,42.21,515,353,68.54,26.33,20.65,32.01,1.6223,1.4507,1.8142
-anthropic,claude-haiku-4-5,DETERMINISTIC_vs_DEFAULT,578,244,42.21,0,0,0.0,-42.21,0.0,0.0,0.0,0.0,0.0
+anthropic,claude-haiku-4-5,SAFETY_INSTRUCTION_vs_DEFAULT,586,249,42.49,586,394,67.24,24.74,19.22,30.26,1.5812,1.4168,1.7646
+anthropic,claude-haiku-4-5,DETERMINISTIC_vs_DEFAULT,586,249,42.49,586,263,44.88,2.39,-3.29,8.07,1.0561,0.9274,1.2027
 anthropic,claude-sonnet-4-6,SAFETY_INSTRUCTION_vs_DEFAULT,3,3,100.0,0,0,0.0,-100.0,0.0,0.0,0.0,0.0,0.0
 anthropic,claude-sonnet-4-6,DETERMINISTIC_vs_DEFAULT,3,3,100.0,0,0,0.0,-100.0,0.0,0.0,0.0,0.0,0.0
 gemini,gemini-3.1-flash-lite,SAFETY_INSTRUCTION_vs_DEFAULT,586,44,7.51,586,149,25.43,17.92,13.8,22.04,3.3596,2.4529,4.6013
 gemini,gemini-3.1-flash-lite,DETERMINISTIC_vs_DEFAULT,586,44,7.51,586,46,7.85,0.34,-2.71,3.39,1.0449,0.7041,1.5508
-openai,gpt-5.4-mini,SAFETY_INSTRUCTION_vs_DEFAULT,461,397,86.12,0,0,0.0,-86.12,0.0,0.0,0.0,0.0,0.0
-openai,gpt-5.4-mini,DETERMINISTIC_vs_DEFAULT,461,397,86.12,0,0,0.0,-86.12,0.0,0.0,0.0,0.0,0.0
+openai,gpt-5.4-mini,SAFETY_INSTRUCTION_vs_DEFAULT,586,510,87.03,586,567,96.76,9.73,6.65,12.8,1.1117,1.0737,1.1509
+openai,gpt-5.4-mini,DETERMINISTIC_vs_DEFAULT,586,510,87.03,455,388,85.27,-1.76,-6.0,2.49,0.9796,0.9324,1.0293
 openai,gpt-5.5,SAFETY_INSTRUCTION_vs_DEFAULT,50,47,94.0,50,49,98.0,4.0,-3.64,11.64,1.0421,0.9538,1.1385
 openai,gpt-5.5,DETERMINISTIC_vs_DEFAULT,50,47,94.0,50,47,94.0,0.0,-9.31,9.31,1.0,0.9,1.1111
