@@ -1,6 +1,6 @@
 # PAHS — Live Results Dashboard
 
-**Source:** PAHS_STUDY_RESULTS_2026 | **Generated:** 2026-05-20 07:10 | **Total Trials:** 5143
+**Source:** PAHS_STUDY_RESULTS_2026 | **Generated:** 2026-05-22 23:33 | **Total Trials:** 5218
 
 ---
 
@@ -19,11 +19,11 @@
 
 | Category | Count | Rate |
 | --- | ---: | ---: |
-| ✅ Successful Defense | 881 | 17.1% |
-| ❌ Silent Adoption | 2098 | 40.8% |
+| ✅ Successful Defense | 902 | 17.3% |
+| ❌ Silent Adoption | 2104 | 40.3% |
 | ⚠️ False Positive | 0 | 0.0% |
-| 🔍 Blind Spot | 2164 | 42.1% |
-| **Total trials** | **5143** | |
+| 🔍 Blind Spot | 2212 | 42.4% |
+| **Total trials** | **5218** | |
 
 ---
 
@@ -37,7 +37,7 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | 1 | openai/gpt-5.4-mini | SAFETY_INSTRUCTION | 586 | 2.0% | 3.1% | 0.0% | 94.9% | 0.0% |
 | 2 | openai/gpt-5.4-mini | DEFAULT | 586 | 32.9% | 12.8% | 0.0% | 54.3% | 0.0% |
-| 3 | openai/gpt-5.4-mini | DETERMINISTIC | 455 | 30.5% | 14.7% | 0.0% | 54.7% | 0.2% |
+| 3 | openai/gpt-5.4-mini | DETERMINISTIC | 530 | 30.2% | 13.8% | 0.0% | 56.0% | 0.2% |
 | 4 | anthropic/claude-haiku-4-5 | SAFETY_INSTRUCTION | 586 | 22.9% | 32.4% | 0.0% | 44.7% | 0.0% |
 | 5 | anthropic/claude-haiku-4-5 | DETERMINISTIC | 586 | 27.8% | 54.9% | 0.0% | 17.2% | 0.0% |
 | 6 | anthropic/claude-haiku-4-5 | DEFAULT | 586 | 25.8% | 57.2% | 0.0% | 17.1% | 0.0% |
@@ -53,7 +53,7 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 | --- | ---: | ---: | ---: | ---: | ---: |
 | anthropic/claude-haiku-4-5 | 1758 | 25.5% | 48.2% | 0.0% | 26.3% |
 | gemini/gemini-3.1-flash-lite | 1758 | 5.1% | 62.1% | 0.0% | 32.9% |
-| openai/gpt-5.4-mini | 1627 | 21.1% | 9.8% | 0.0% | 69.0% |
+| openai/gpt-5.4-mini | 1702 | 21.4% | 9.8% | 0.0% | 68.8% |
 
 ---
 
@@ -62,7 +62,7 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 | Condition | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | DEFAULT | 1758 | 21.7% | 49.8% | 0.0% | 28.5% |
-| DETERMINISTIC | 1627 | 21.2% | 52.9% | 0.0% | 25.9% |
+| DETERMINISTIC | 1702 | 21.5% | 50.9% | 0.0% | 27.6% |
 | SAFETY_INSTRUCTION | 1758 | 8.8% | 20.6% | 0.0% | 70.6% |
 
 ---

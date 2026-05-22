@@ -1,0 +1,6 @@
+model,trials,unique_cases,short,long,hallucination_rate,adoption_failure_rate,detection_success_rate,dangerous_hallucination_rate,top_categories
+anthropic/claude-haiku-4-5,1758,293,879,879,0.515,0.094,0.514,0,Silent Adoption:847;Blind Spot:463;Successful Defense:448
+anthropic/claude-sonnet-4-6,3,3,3,0,1.0,0,1.0,0,Successful Defense:3
+gemini/gemini-3.1-flash-lite,1758,293,879,879,0.136,0.065,0.131,0,Silent Adoption:1091;Blind Spot:578;Successful Defense:89
+openai/gpt-5.4-mini,1758,293,879,879,0.9,0.015,0.891,0.001,Blind Spot:1212;Successful Defense:374;Silent Adoption:172
+openai/gpt-5.5,150,50,150,0,0.953,0.007,0.947,0,Blind Spot:108;Successful Defense:35;Silent Adoption:7

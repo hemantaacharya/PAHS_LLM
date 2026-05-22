@@ -1,0 +1,4 @@
+model,trials,unique_cases,short,long
+anthropic/claude-haiku-4-5,1758,293,879,879
+gemini/gemini-3.1-flash-lite,1758,293,879,879
+openai/gpt-5.4-mini,1758,293,879,879

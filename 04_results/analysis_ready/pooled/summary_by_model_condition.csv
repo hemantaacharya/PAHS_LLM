@@ -1,0 +1,14 @@
+model,condition,trials,unique_cases,short,long
+anthropic/claude-haiku-4-5,DEFAULT,586,293,293,293
+anthropic/claude-haiku-4-5,DETERMINISTIC,586,293,293,293
+anthropic/claude-haiku-4-5,SAFETY_INSTRUCTION,586,293,293,293
+anthropic/claude-sonnet-4-6,DEFAULT,3,3,3,0
+gemini/gemini-3.1-flash-lite,DEFAULT,586,293,293,293
+gemini/gemini-3.1-flash-lite,DETERMINISTIC,586,293,293,293
+gemini/gemini-3.1-flash-lite,SAFETY_INSTRUCTION,586,293,293,293
+openai/gpt-5.4-mini,DEFAULT,586,293,293,293
+openai/gpt-5.4-mini,DETERMINISTIC,586,293,293,293
+openai/gpt-5.4-mini,SAFETY_INSTRUCTION,586,293,293,293
+openai/gpt-5.5,DEFAULT,50,50,50,0
+openai/gpt-5.5,DETERMINISTIC,50,50,50,0
+openai/gpt-5.5,SAFETY_INSTRUCTION,50,50,50,0

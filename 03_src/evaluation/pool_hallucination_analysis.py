@@ -137,6 +137,9 @@ def load_trials(input_glob, real_terms):
                     "hallucination_detected": to_bool(
                         output.get("hallucination_detected")
                     ),
+                    "endorsed_hallucination": to_bool(
+                        output.get("endorsed_hallucination")
+                    ),
                     "adoption_rate_failure": to_bool(
                         logic.get("adoption_rate_failure")
                     ),
@@ -201,6 +204,9 @@ def aggregate_tables(trials):
         hall_rate = safe_div(hall, n)
         ci_low, ci_high = wilson_ci(hall, n)
 
+        endorsed = sum(r["endorsed_hallucination"] for r in rows)
+        endorsed_rate = safe_div(endorsed, n)
+
         table2.append(
             {
                 "provider": provider,
@@ -210,6 +216,9 @@ def aggregate_tables(trials):
                 "hallucination_count": hall,
                 "hallucination_rate": round(hall_rate, 6),
                 "hallucination_rate_pct": round(hall_rate * 100, 2),
+                "endorsed_hallucination_count": endorsed,
+                "endorsed_hallucination_rate": round(endorsed_rate, 6),
+                "endorsed_hallucination_rate_pct": round(endorsed_rate * 100, 2),
                 "hall_ci_low_pct": round(ci_low * 100, 2),
                 "hall_ci_high_pct": round(ci_high * 100, 2),
                 "adoption_failure_rate_pct": round(
@@ -341,6 +350,7 @@ def main():
         "vignette_length",
         "case_id",
         "hallucination_detected",
+        "endorsed_hallucination",
         "adoption_rate_failure",
         "detection_rate_success",
         "dangerous_reasoning_hallucination",
@@ -375,6 +385,9 @@ def main():
             "hallucination_count",
             "hallucination_rate",
             "hallucination_rate_pct",
+            "endorsed_hallucination_count",
+            "endorsed_hallucination_rate",
+            "endorsed_hallucination_rate_pct",
             "hall_ci_low_pct",
             "hall_ci_high_pct",
             "adoption_failure_rate_pct",

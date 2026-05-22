@@ -1,0 +1,468 @@
+{
+  "overall": {
+    "trials": 5427,
+    "unique_cases": 293,
+    "short": 2790,
+    "long": 2637,
+    "hallucination_rate": 0.5295743504698729,
+    "adoption_failure_rate": 0.05675327068361894,
+    "detection_success_rate": 0.5242306983600515,
+    "dangerous_hallucination_rate": 0.00018426386585590566,
+    "top_categories": [
+      [
+        "Blind Spot",
+        2361
+      ],
+      [
+        "Silent Adoption",
+        2117
+      ],
+      [
+        "Successful Defense",
+        949
+      ]
+    ]
+  },
+  "by_model": {
+    "anthropic/claude-haiku-4-5": {
+      "trials": 1758,
+      "unique_cases": 293,
+      "short": 879,
+      "long": 879,
+      "hallucination_rate": 0.515358361774744,
+      "adoption_failure_rate": 0.09442548350398179,
+      "detection_success_rate": 0.5136518771331058,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          847
+        ],
+        [
+          "Blind Spot",
+          463
+        ],
+        [
+          "Successful Defense",
+          448
+        ]
+      ]
+    },
+    "anthropic/claude-sonnet-4-6": {
+      "trials": 3,
+      "unique_cases": 3,
+      "short": 3,
+      "long": 0,
+      "hallucination_rate": 1.0,
+      "adoption_failure_rate": 0.0,
+      "detection_success_rate": 1.0,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Successful Defense",
+          3
+        ]
+      ]
+    },
+    "gemini/gemini-3.1-flash-lite": {
+      "trials": 1758,
+      "unique_cases": 293,
+      "short": 879,
+      "long": 879,
+      "hallucination_rate": 0.13594994311717862,
+      "adoption_failure_rate": 0.06541524459613197,
+      "detection_success_rate": 0.13139931740614336,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          1091
+        ],
+        [
+          "Blind Spot",
+          578
+        ],
+        [
+          "Successful Defense",
+          89
+        ]
+      ]
+    },
+    "openai/gpt-5.4-mini": {
+      "trials": 1758,
+      "unique_cases": 293,
+      "short": 879,
+      "long": 879,
+      "hallucination_rate": 0.9004550625711035,
+      "adoption_failure_rate": 0.01478953356086462,
+      "detection_success_rate": 0.8907849829351536,
+      "dangerous_hallucination_rate": 0.0005688282138794084,
+      "top_categories": [
+        [
+          "Blind Spot",
+          1212
+        ],
+        [
+          "Successful Defense",
+          374
+        ],
+        [
+          "Silent Adoption",
+          172
+        ]
+      ]
+    },
+    "openai/gpt-5.5": {
+      "trials": 150,
+      "unique_cases": 50,
+      "short": 150,
+      "long": 0,
+      "hallucination_rate": 0.9533333333333334,
+      "adoption_failure_rate": 0.006666666666666667,
+      "detection_success_rate": 0.9466666666666667,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          108
+        ],
+        [
+          "Successful Defense",
+          35
+        ],
+        [
+          "Silent Adoption",
+          7
+        ]
+      ]
+    }
+  },
+  "by_model_condition": {
+    "anthropic/claude-haiku-4-5||DEFAULT": {
+      "model": "anthropic/claude-haiku-4-5",
+      "condition": "DEFAULT",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.4249146757679181,
+      "adoption_failure_rate": 0.11262798634812286,
+      "detection_success_rate": 0.4232081911262799,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          335
+        ],
+        [
+          "Successful Defense",
+          151
+        ],
+        [
+          "Blind Spot",
+          100
+        ]
+      ]
+    },
+    "anthropic/claude-haiku-4-5||DETERMINISTIC": {
+      "model": "anthropic/claude-haiku-4-5",
+      "condition": "DETERMINISTIC",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.44880546075085326,
+      "adoption_failure_rate": 0.10238907849829351,
+      "detection_success_rate": 0.44880546075085326,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          322
+        ],
+        [
+          "Successful Defense",
+          163
+        ],
+        [
+          "Blind Spot",
+          101
+        ]
+      ]
+    },
+    "anthropic/claude-haiku-4-5||SAFETY_INSTRUCTION": {
+      "model": "anthropic/claude-haiku-4-5",
+      "condition": "SAFETY_INSTRUCTION",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.6723549488054608,
+      "adoption_failure_rate": 0.06825938566552901,
+      "detection_success_rate": 0.6689419795221843,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          262
+        ],
+        [
+          "Silent Adoption",
+          190
+        ],
+        [
+          "Successful Defense",
+          134
+        ]
+      ]
+    },
+    "anthropic/claude-sonnet-4-6||DEFAULT": {
+      "model": "anthropic/claude-sonnet-4-6",
+      "condition": "DEFAULT",
+      "trials": 3,
+      "unique_cases": 3,
+      "short": 3,
+      "long": 0,
+      "hallucination_rate": 1.0,
+      "adoption_failure_rate": 0.0,
+      "detection_success_rate": 1.0,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Successful Defense",
+          3
+        ]
+      ]
+    },
+    "gemini/gemini-3.1-flash-lite||DEFAULT": {
+      "model": "gemini/gemini-3.1-flash-lite",
+      "condition": "DEFAULT",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.07508532423208192,
+      "adoption_failure_rate": 0.10580204778156997,
+      "detection_success_rate": 0.07167235494880546,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          466
+        ],
+        [
+          "Blind Spot",
+          83
+        ],
+        [
+          "Successful Defense",
+          37
+        ]
+      ]
+    },
+    "gemini/gemini-3.1-flash-lite||DETERMINISTIC": {
+      "model": "gemini/gemini-3.1-flash-lite",
+      "condition": "DETERMINISTIC",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.07849829351535836,
+      "adoption_failure_rate": 0.07508532423208192,
+      "detection_success_rate": 0.06996587030716724,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Silent Adoption",
+          471
+        ],
+        [
+          "Blind Spot",
+          72
+        ],
+        [
+          "Successful Defense",
+          43
+        ]
+      ]
+    },
+    "gemini/gemini-3.1-flash-lite||SAFETY_INSTRUCTION": {
+      "model": "gemini/gemini-3.1-flash-lite",
+      "condition": "SAFETY_INSTRUCTION",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.25426621160409557,
+      "adoption_failure_rate": 0.015358361774744027,
+      "detection_success_rate": 0.2525597269624573,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          423
+        ],
+        [
+          "Silent Adoption",
+          154
+        ],
+        [
+          "Successful Defense",
+          9
+        ]
+      ]
+    },
+    "openai/gpt-5.4-mini||DEFAULT": {
+      "model": "openai/gpt-5.4-mini",
+      "condition": "DEFAULT",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.8703071672354948,
+      "adoption_failure_rate": 0.02218430034129693,
+      "detection_success_rate": 0.863481228668942,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          318
+        ],
+        [
+          "Successful Defense",
+          193
+        ],
+        [
+          "Silent Adoption",
+          75
+        ]
+      ]
+    },
+    "openai/gpt-5.4-mini||DETERMINISTIC": {
+      "model": "openai/gpt-5.4-mini",
+      "condition": "DETERMINISTIC",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.863481228668942,
+      "adoption_failure_rate": 0.01877133105802048,
+      "detection_success_rate": 0.8515358361774744,
+      "dangerous_hallucination_rate": 0.0017064846416382253,
+      "top_categories": [
+        [
+          "Blind Spot",
+          338
+        ],
+        [
+          "Successful Defense",
+          169
+        ],
+        [
+          "Silent Adoption",
+          79
+        ]
+      ]
+    },
+    "openai/gpt-5.4-mini||SAFETY_INSTRUCTION": {
+      "model": "openai/gpt-5.4-mini",
+      "condition": "SAFETY_INSTRUCTION",
+      "trials": 586,
+      "unique_cases": 293,
+      "short": 293,
+      "long": 293,
+      "hallucination_rate": 0.9675767918088737,
+      "adoption_failure_rate": 0.0034129692832764505,
+      "detection_success_rate": 0.9573378839590444,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          556
+        ],
+        [
+          "Silent Adoption",
+          18
+        ],
+        [
+          "Successful Defense",
+          12
+        ]
+      ]
+    },
+    "openai/gpt-5.5||DEFAULT": {
+      "model": "openai/gpt-5.5",
+      "condition": "DEFAULT",
+      "trials": 50,
+      "unique_cases": 50,
+      "short": 50,
+      "long": 0,
+      "hallucination_rate": 0.94,
+      "adoption_failure_rate": 0.0,
+      "detection_success_rate": 0.94,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          29
+        ],
+        [
+          "Successful Defense",
+          18
+        ],
+        [
+          "Silent Adoption",
+          3
+        ]
+      ]
+    },
+    "openai/gpt-5.5||DETERMINISTIC": {
+      "model": "openai/gpt-5.5",
+      "condition": "DETERMINISTIC",
+      "trials": 50,
+      "unique_cases": 50,
+      "short": 50,
+      "long": 0,
+      "hallucination_rate": 0.94,
+      "adoption_failure_rate": 0.02,
+      "detection_success_rate": 0.94,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          30
+        ],
+        [
+          "Successful Defense",
+          17
+        ],
+        [
+          "Silent Adoption",
+          3
+        ]
+      ]
+    },
+    "openai/gpt-5.5||SAFETY_INSTRUCTION": {
+      "model": "openai/gpt-5.5",
+      "condition": "SAFETY_INSTRUCTION",
+      "trials": 50,
+      "unique_cases": 50,
+      "short": 50,
+      "long": 0,
+      "hallucination_rate": 0.98,
+      "adoption_failure_rate": 0.0,
+      "detection_success_rate": 0.96,
+      "dangerous_hallucination_rate": 0.0,
+      "top_categories": [
+        [
+          "Blind Spot",
+          49
+        ],
+        [
+          "Silent Adoption",
+          1
+        ]
+      ]
+    }
+  }
+}

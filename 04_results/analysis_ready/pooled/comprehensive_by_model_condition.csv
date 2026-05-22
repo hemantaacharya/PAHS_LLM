@@ -1,0 +1,14 @@
+model,condition,trials,unique_cases,short,long,hallucination_rate,adoption_failure_rate,detection_success_rate,dangerous_hallucination_rate,top_categories
+anthropic/claude-haiku-4-5,DEFAULT,586,293,293,293,0.425,0.113,0.423,0,Silent Adoption:335;Successful Defense:151;Blind Spot:100
+anthropic/claude-haiku-4-5,DETERMINISTIC,586,293,293,293,0.449,0.102,0.449,0,Silent Adoption:322;Successful Defense:163;Blind Spot:101
+anthropic/claude-haiku-4-5,SAFETY_INSTRUCTION,586,293,293,293,0.672,0.068,0.669,0,Blind Spot:262;Silent Adoption:190;Successful Defense:134
+anthropic/claude-sonnet-4-6,DEFAULT,3,3,3,0,1.0,0,1.0,0,Successful Defense:3
+gemini/gemini-3.1-flash-lite,DEFAULT,586,293,293,293,0.075,0.106,0.072,0,Silent Adoption:466;Blind Spot:83;Successful Defense:37
+gemini/gemini-3.1-flash-lite,DETERMINISTIC,586,293,293,293,0.078,0.075,0.07,0,Silent Adoption:471;Blind Spot:72;Successful Defense:43
+gemini/gemini-3.1-flash-lite,SAFETY_INSTRUCTION,586,293,293,293,0.254,0.015,0.253,0,Blind Spot:423;Silent Adoption:154;Successful Defense:9
+openai/gpt-5.4-mini,DEFAULT,586,293,293,293,0.87,0.022,0.863,0,Blind Spot:318;Successful Defense:193;Silent Adoption:75
+openai/gpt-5.4-mini,DETERMINISTIC,586,293,293,293,0.863,0.019,0.852,0.002,Blind Spot:338;Successful Defense:169;Silent Adoption:79
+openai/gpt-5.4-mini,SAFETY_INSTRUCTION,586,293,293,293,0.968,0.003,0.957,0,Blind Spot:556;Silent Adoption:18;Successful Defense:12
+openai/gpt-5.5,DEFAULT,50,50,50,0,0.94,0,0.94,0,Blind Spot:29;Successful Defense:18;Silent Adoption:3
+openai/gpt-5.5,DETERMINISTIC,50,50,50,0,0.94,0.02,0.94,0,Blind Spot:30;Successful Defense:17;Silent Adoption:3
+openai/gpt-5.5,SAFETY_INSTRUCTION,50,50,50,0,0.98,0,0.96,0,Blind Spot:49;Silent Adoption:1

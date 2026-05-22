@@ -6,7 +6,7 @@
     "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json",
     "PILOT_2026_RESULTS.json"
   ],
-  "pooled_trials": 5296,
+  "pooled_trials": 5427,
   "unique_model_count": 5,
   "output_files": [
     "pooled_trial_level.csv",
