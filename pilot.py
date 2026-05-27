@@ -30,19 +30,21 @@ client = instructor.from_litellm(completion)
 # Usage:
 #   python pilot.py --provider openai
 #   python pilot.py --model openai/gpt-5.5
+#   python pilot.py --provider opensource --model ollama/llama2
 #   python pilot.py --independent-model-runs
+#   python pilot.py --vignettes-count 293  # Full study
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Run the 2026 pilot against one or more LLM providers."
     )
     parser.add_argument(
         "--provider",
-        choices=["openai", "anthropic", "gemini"],
+        choices=["openai", "anthropic", "gemini", "opensource"],
         help="Limit the run to a single provider.",
     )
     parser.add_argument(
         "--model",
-        help="Limit the run to a single model identifier, for example openai/gpt-5.5.",
+        help="Limit the run to a single model identifier, for example openai/gpt-5.5 or ollama/llama2.",
     )
     parser.add_argument(
         "--vignettes-count",
@@ -568,13 +570,18 @@ def run_pilot():
     openai_model = os.getenv("PAHS_OPENAI_MODEL", "openai/gpt-5.4-mini")
     anthropic_model = os.getenv(
         "PAHS_ANTHROPIC_MODEL", "anthropic/claude-haiku-4-5"
-    )
-    gemini_model = os.getenv("PAHS_GEMINI_MODEL", "gemini/gemini-3.1-flash-lite")
+    opensource_model = os.getenv("PAHS_OPENSOURCE_MODEL", None)
 
-    # Requested evaluation trio
+    # Requested evaluation models: 3 paid + optional opensource
     models = [
         openai_model,
         anthropic_model,
+        gemini_model,
+    ]
+    
+    # Add opensource model if specified
+    if opensource_model:
+        models.append(opensource_model)   anthropic_model,
         gemini_model,
     ]
 

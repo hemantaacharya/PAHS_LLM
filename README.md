@@ -22,6 +22,22 @@ python main.py --provider anthropic
 python pilot.py --model openai/gpt-5-mini
 ```
 
+## Model Selection & Customization
+
+The default models are low-cost variants suitable for efficient testing. To use different model versions or customize the defaults:
+
+```bash
+# Use higher-performance models
+export PAHS_OPENAI_MODEL=openai/gpt-5.4
+export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet
+export PAHS_GEMINI_MODEL=google/gemini-2.0-flash
+
+# Then run
+python pilot.py --vignettes-count 293
+```
+
+**For detailed model comparison and upgrade guidance, see [MODEL_REFINEMENT_GUIDE.md](MODEL_REFINEMENT_GUIDE.md).**
+
 ## Extract Hallucination Data
 
 To pull only hallucination-focused rows from a results file, run:
