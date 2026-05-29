@@ -494,6 +494,17 @@ def _extract_json_content(raw_response):
     return json.loads(content)
 
 
+def _coerce_clinical_output(payload):
+    """Coerce string-typed fields that open-source models sometimes return incorrectly."""
+    if "diagnostic_confidence" in payload:
+        payload["diagnostic_confidence"] = int(payload["diagnostic_confidence"])
+    if "hallucination_detected" in payload:
+        v = payload["hallucination_detected"]
+        if isinstance(v, str):
+            payload["hallucination_detected"] = v.strip().lower() == "true"
+    return payload
+
+
 def _to_openai_strict_schema(schema_node):
     if isinstance(schema_node, dict):
         normalized = {
@@ -535,6 +546,19 @@ def create_structured_clinical_output(model, sys_msg, vignette_text, temperature
 
         raw_response = completion(**params)
         payload = _extract_json_content(raw_response)
+        return ClinicalOutput.model_validate(payload)
+
+    if model.startswith("groq/"):
+        schema_str = json.dumps(ClinicalOutput.model_json_schema(), indent=2)
+        messages[-1]["content"] += (
+            f"\n\nRespond ONLY with a valid JSON object matching this schema (no markdown, no extra text):\n{schema_str}"
+            "\nIMPORTANT: diagnostic_confidence must be an integer (e.g. 80), hallucination_detected must be a boolean (true or false)."
+        )
+        params = {"model": model, "messages": messages, "response_format": {"type": "json_object"}}
+        if temperature is not None:
+            params["temperature"] = temperature
+        raw_response = completion(**params)
+        payload = _coerce_clinical_output(_extract_json_content(raw_response))
         return ClinicalOutput.model_validate(payload)
 
     params = {
@@ -632,37 +656,68 @@ def execute_study():
                         continue
 
                     vignette_text = case["vignette_pair"][length]["content"]
-                    print(f"Running: {model} | {condition} | {case_id}")
+                    done_count = sum(1 for r in final_results if r["model"] == model)
+                    total_count = len(conditions) * len(vignettes) * len(lengths)
+                    print(f"[{done_count+1}/{total_count}] Running: {model} | {condition} | {length} | {case_id}", flush=True)
 
                     config = condition_configs[condition]
                     sys_msg = config["system_message"]
                     condition_temperature = config["temperature"]
 
-                    try:
-                        response = create_structured_clinical_output(
-                            model, sys_msg, vignette_text, condition_temperature
-                        )
+                    for attempt in range(5):
+                        try:
+                            response = create_structured_clinical_output(
+                                model, sys_msg, vignette_text, condition_temperature
+                            )
 
-                        trial_data = {
-                            "model": model,
-                            "requested_model": model,
-                            "condition": condition,
-                            "length": length,
-                            "case_id": case_id,
-                            "target_token": case["token_text"],
-                            "output": response.model_dump(),
-                            "timestamp": datetime.now().isoformat(),
-                        }
+                            trial_data = {
+                                "model": model,
+                                "requested_model": model,
+                                "condition": condition,
+                                "length": length,
+                                "case_id": case_id,
+                                "target_token": case["token_text"],
+                                "output": response.model_dump(),
+                                "timestamp": datetime.now().isoformat(),
+                            }
 
-                        final_results.append(trial_data)
-                        output_paths = write_results_files(final_results, output_file)
-                        _print_live_status(output_paths["dashboard"], model, condition)
+                            final_results.append(trial_data)
 
-                        time.sleep(1.0)  # Rate limit safety
+                            # Always write raw JSON for resume safety
+                            os.makedirs(os.path.dirname(output_file), exist_ok=True)
+                            with open(output_file, "w") as _f:
+                                json.dump(final_results, _f, indent=2)
 
-                    except Exception as e:
-                        print(f"Error on {case_id} ({model}): {e}")
-                        time.sleep(5)
+                            # Full analysis + dashboard every 10 trials only
+                            if len(final_results) % 10 == 0:
+                                output_paths = write_results_files(final_results, output_file)
+                                _print_live_status(output_paths["dashboard"], model, condition)
+                            else:
+                                done_count = sum(1 for r in final_results if r["model"] == model)
+                                print(f"  saved {done_count} trials", flush=True)
+                            sys.stdout.flush()
+
+                            # groq/llama-3.3-70b-versatile: 12k tokens/min → 5s
+                            # meta-llama/llama-4-scout: 30k tokens/min → 1s
+                            if "llama-4-scout" in model:
+                                sleep_secs = 1.0
+                            elif model.startswith("groq/"):
+                                sleep_secs = 5.0
+                            else:
+                                sleep_secs = 1.0
+                            time.sleep(sleep_secs)
+                            break
+
+                        except Exception as e:
+                            err = str(e)
+                            if "rate_limit" in err.lower() or "429" in err:
+                                wait = 60 * (attempt + 1)
+                                print(f"Rate limit hit — waiting {wait}s (attempt {attempt+1}/5)", flush=True)
+                                time.sleep(wait)
+                            else:
+                                print(f"Error on {case_id} ({model}): {e}", flush=True)
+                                time.sleep(5)
+                                break
 
         if args.independent_model_runs:
             print(

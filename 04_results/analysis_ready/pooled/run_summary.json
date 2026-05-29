@@ -3,11 +3,10 @@
   "source_files_included": [
     "PAHS_STUDY_RESULTS_2026_anthropic_claude-haiku-4-5.json",
     "PAHS_STUDY_RESULTS_2026_gemini_gemini-3.1-flash-lite.json",
-    "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json",
-    "PILOT_2026_RESULTS.json"
+    "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json"
   ],
-  "pooled_trials": 5427,
-  "unique_model_count": 5,
+  "pooled_trials": 5400,
+  "unique_model_count": 3,
   "output_files": [
     "pooled_trial_level.csv",
     "table1_coverage.csv",

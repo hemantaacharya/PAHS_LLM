@@ -1,6 +1,4 @@
 provider,model_name,completed_trials,default_n,safety_instruction_n,deterministic_n,short_n,long_n
-anthropic,claude-haiku-4-5,1758,586,586,586,879,879
-anthropic,claude-sonnet-4-6,3,3,0,0,3,0
-gemini,gemini-3.1-flash-lite,1758,586,586,586,879,879
-openai,gpt-5.4-mini,1758,586,586,586,879,879
-openai,gpt-5.5,150,50,50,50,150,0
+anthropic,claude-haiku-4-5,1800,600,600,600,900,900
+gemini,gemini-3.1-flash-lite,1800,600,600,600,900,900
+openai,gpt-5.4-mini,1800,600,600,600,900,900

@@ -1,6 +1,6 @@
 # PAHS — Live Results Dashboard
 
-**Source:** PAHS_STUDY_RESULTS_2026 | **Generated:** 2026-05-22 23:33 | **Total Trials:** 5218
+**Source:** PAHS_STUDY_RESULTS_2026 | **Generated:** 2026-05-29 21:49 | **Total Trials:** 7200
 
 ---
 
@@ -19,11 +19,11 @@
 
 | Category | Count | Rate |
 | --- | ---: | ---: |
-| ✅ Successful Defense | 902 | 17.3% |
-| ❌ Silent Adoption | 2104 | 40.3% |
+| ✅ Successful Defense | 968 | 13.4% |
+| ❌ Silent Adoption | 3906 | 54.2% |
 | ⚠️ False Positive | 0 | 0.0% |
-| 🔍 Blind Spot | 2212 | 42.4% |
-| **Total trials** | **5218** | |
+| 🔍 Blind Spot | 2326 | 32.3% |
+| **Total trials** | **7200** | |
 
 ---
 
@@ -35,15 +35,18 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 
 | Rank | Model | Condition | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind | ☠️ In Final Dx |
 | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 1 | openai/gpt-5.4-mini | SAFETY_INSTRUCTION | 586 | 2.0% | 3.1% | 0.0% | 94.9% | 0.0% |
-| 2 | openai/gpt-5.4-mini | DEFAULT | 586 | 32.9% | 12.8% | 0.0% | 54.3% | 0.0% |
-| 3 | openai/gpt-5.4-mini | DETERMINISTIC | 530 | 30.2% | 13.8% | 0.0% | 56.0% | 0.2% |
-| 4 | anthropic/claude-haiku-4-5 | SAFETY_INSTRUCTION | 586 | 22.9% | 32.4% | 0.0% | 44.7% | 0.0% |
-| 5 | anthropic/claude-haiku-4-5 | DETERMINISTIC | 586 | 27.8% | 54.9% | 0.0% | 17.2% | 0.0% |
-| 6 | anthropic/claude-haiku-4-5 | DEFAULT | 586 | 25.8% | 57.2% | 0.0% | 17.1% | 0.0% |
-| 7 | gemini/gemini-3.1-flash-lite | SAFETY_INSTRUCTION | 586 | 1.5% | 26.3% | 0.0% | 72.2% | 0.0% |
-| 8 | gemini/gemini-3.1-flash-lite | DEFAULT | 586 | 6.3% | 79.5% | 0.0% | 14.2% | 0.0% |
-| 9 | gemini/gemini-3.1-flash-lite | DETERMINISTIC | 586 | 7.3% | 80.4% | 0.0% | 12.3% | 0.0% |
+| 1 | openai/gpt-5.4-mini | SAFETY_INSTRUCTION | 600 | 2.3% | 3.0% | 0.0% | 94.7% | 0.0% |
+| 2 | openai/gpt-5.4-mini | DEFAULT | 600 | 33.5% | 12.5% | 0.0% | 54.0% | 0.0% |
+| 3 | openai/gpt-5.4-mini | DETERMINISTIC | 600 | 29.3% | 13.3% | 0.0% | 57.3% | 0.2% |
+| 4 | anthropic/claude-haiku-4-5 | SAFETY_INSTRUCTION | 600 | 23.8% | 32.0% | 0.0% | 44.2% | 0.0% |
+| 5 | anthropic/claude-haiku-4-5 | DETERMINISTIC | 600 | 28.3% | 54.8% | 0.0% | 16.8% | 0.0% |
+| 6 | anthropic/claude-haiku-4-5 | DEFAULT | 600 | 26.0% | 57.2% | 0.0% | 16.8% | 0.0% |
+| 7 | gemini/gemini-3.1-flash-lite | SAFETY_INSTRUCTION | 600 | 2.2% | 26.0% | 0.0% | 71.8% | 0.0% |
+| 8 | gemini/gemini-3.1-flash-lite | DEFAULT | 600 | 7.2% | 78.8% | 0.0% | 14.0% | 0.0% |
+| 9 | gemini/gemini-3.1-flash-lite | DETERMINISTIC | 600 | 8.7% | 79.3% | 0.0% | 12.0% | 0.0% |
+| 10 | openrouter/meta-llama/llama-3.3-70b-instruct | SAFETY_INSTRUCTION | 600 | 0.0% | 94.3% | 0.0% | 5.7% | 0.0% |
+| 11 | openrouter/meta-llama/llama-3.3-70b-instruct | DEFAULT | 600 | 0.0% | 99.8% | 0.0% | 0.2% | 0.0% |
+| 12 | openrouter/meta-llama/llama-3.3-70b-instruct | DETERMINISTIC | 600 | 0.0% | 99.8% | 0.0% | 0.2% | 0.0% |
 
 ---
 
@@ -51,9 +54,10 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 
 | Model | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| anthropic/claude-haiku-4-5 | 1758 | 25.5% | 48.2% | 0.0% | 26.3% |
-| gemini/gemini-3.1-flash-lite | 1758 | 5.1% | 62.1% | 0.0% | 32.9% |
-| openai/gpt-5.4-mini | 1702 | 21.4% | 9.8% | 0.0% | 68.8% |
+| anthropic/claude-haiku-4-5 | 1800 | 26.1% | 48.0% | 0.0% | 25.9% |
+| gemini/gemini-3.1-flash-lite | 1800 | 6.0% | 61.4% | 0.0% | 32.6% |
+| openai/gpt-5.4-mini | 1800 | 21.7% | 9.6% | 0.0% | 68.7% |
+| openrouter/meta-llama/llama-3.3-70b-instruct | 1800 | 0.0% | 98.0% | 0.0% | 2.0% |
 
 ---
 
@@ -61,9 +65,9 @@ Ranked by: defense rate ↑ → adoption rate ↓ → dangerous reasoning rate �
 
 | Condition | n | ✅ Defense | ❌ Adopted | ⚠️ FP | 🔍 Blind |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| DEFAULT | 1758 | 21.7% | 49.8% | 0.0% | 28.5% |
-| DETERMINISTIC | 1702 | 21.5% | 50.9% | 0.0% | 27.6% |
-| SAFETY_INSTRUCTION | 1758 | 8.8% | 20.6% | 0.0% | 70.6% |
+| DEFAULT | 2400 | 16.7% | 62.1% | 0.0% | 21.2% |
+| DETERMINISTIC | 2400 | 16.6% | 61.8% | 0.0% | 21.6% |
+| SAFETY_INSTRUCTION | 2400 | 7.1% | 38.8% | 0.0% | 54.1% |
 
 ---
 

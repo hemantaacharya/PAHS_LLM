@@ -53,6 +53,11 @@ def parse_args():
         help="Number of vignettes to sample for the pilot.",
     )
     parser.add_argument(
+        "--input-file",
+        default="02_data/experimental/combined_vignettes_clean.json",
+        help="Path to the JSON vignette dataset.",
+    )
+    parser.add_argument(
         "--output-file",
         default=None,
         help="Optional path for the JSON results file.",
@@ -504,6 +509,16 @@ def _extract_json_content(raw_response):
     return json.loads(content)
 
 
+def _coerce_clinical_output(payload):
+    if "diagnostic_confidence" in payload:
+        payload["diagnostic_confidence"] = int(payload["diagnostic_confidence"])
+    if "hallucination_detected" in payload:
+        v = payload["hallucination_detected"]
+        if isinstance(v, str):
+            payload["hallucination_detected"] = v.strip().lower() == "true"
+    return payload
+
+
 def _to_openai_strict_schema(schema_node):
     if isinstance(schema_node, dict):
         normalized = {
@@ -543,9 +558,21 @@ def create_structured_clinical_output(model, sys_msg, vignette_text, temperature
         }
         if temperature is not None:
             params["temperature"] = temperature
-
         raw_response = completion(**params)
         payload = _extract_json_content(raw_response)
+        return ClinicalOutput.model_validate(payload)
+
+    if model.startswith("groq/"):
+        schema_str = json.dumps(ClinicalOutput.model_json_schema(), indent=2)
+        messages[-1]["content"] += (
+            f"\n\nRespond ONLY with a valid JSON object matching this schema (no markdown, no extra text):\n{schema_str}"
+            "\nIMPORTANT: diagnostic_confidence must be an integer (e.g. 80), hallucination_detected must be a boolean (true or false)."
+        )
+        params = {"model": model, "messages": messages, "response_format": {"type": "json_object"}}
+        if temperature is not None:
+            params["temperature"] = temperature
+        raw_response = completion(**params)
+        payload = _coerce_clinical_output(_extract_json_content(raw_response))
         return ClinicalOutput.model_validate(payload)
 
     params = {
@@ -565,11 +592,11 @@ def create_structured_clinical_output(model, sys_msg, vignette_text, temperature
 
 def run_pilot():
     args = parse_args()
-    input_file = "02_data/experimental/combined_vignettes_clean.json"
+    input_file = args.input_file
 
     openai_model = os.getenv("PAHS_OPENAI_MODEL", "openai/gpt-5.4-mini")
-    anthropic_model = os.getenv(
-        "PAHS_ANTHROPIC_MODEL", "anthropic/claude-haiku-4-5"
+    anthropic_model = os.getenv("PAHS_ANTHROPIC_MODEL", "anthropic/claude-haiku-4-5")
+    gemini_model = os.getenv("PAHS_GEMINI_MODEL", "gemini/gemini-3.1-flash-lite")
     opensource_model = os.getenv("PAHS_OPENSOURCE_MODEL", None)
 
     # Requested evaluation models: 3 paid + optional opensource
@@ -578,12 +605,9 @@ def run_pilot():
         anthropic_model,
         gemini_model,
     ]
-    
-    # Add opensource model if specified
+
     if opensource_model:
-        models.append(opensource_model)   anthropic_model,
-        gemini_model,
-    ]
+        models.append(opensource_model)
 
     models = select_models(models, args.provider, args.model)
 

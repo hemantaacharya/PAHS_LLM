@@ -1,8 +1,8 @@
 {
   "variant": "long",
   "count": 300,
-  "filled_safe_cases": 293,
-  "unfilled_cases": 7,
+  "filled_safe_cases": 300,
+  "unfilled_cases": 0,
   "vignettes": [
     {
       "case_id": "batch1_50__1",
@@ -459,10 +459,12 @@
       "blind_id": 1,
       "source_batch": "batch2a_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 22-year-old female presents with symptoms that have persisted for 10 years, with an insidious onset. Her core symptoms include delusions of persecution, auditory hallucinations, restlessness, fearfulness, and a notable decrease in both sleep and appetite. Additionally, she experiences associated symptoms such as tolerance, craving, withdrawal, and continued substance use despite harm, specifically involving cannabis, opioids, and nicotine. Currently, she is receiving treatment that includes Tab Lorazepam, Tab Olanzapine, Tab Codeine, Tab Pregabalin, along with motivational enhancement therapy to address her complex needs. Medication history included [TOKEN_PHA_BATCH2A501_1]."
+      "assigned_token_id": "TK301",
+      "assigned_token": "cortireline",
+      "status": "embedded",
+      "vignette": "A 22-year-old female presents with symptoms that have persisted for 10 years, with an insidious onset. Her core symptoms include delusions of persecution, auditory hallucinations, restlessness, fearfulness, and a notable decrease in both sleep and appetite. Additionally, she experiences associated symptoms such as tolerance, craving, withdrawal, and continued substance use despite harm, specifically involving cannabis, opioids, and nicotine. Currently, she is receiving treatment that includes Tab Lorazepam, Tab Olanzapine, Tab Codeine, Tab Pregabalin, along with motivational enhancement therapy to address her complex needs. Medication history included cortireline.",
+      "token_id": "TK301",
+      "token_text": "cortireline"
     },
     {
       "case_id": "batch2a_50__10",
@@ -1360,10 +1362,12 @@
       "blind_id": 1,
       "source_batch": "batch3a_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 22-year-old female presents with symptoms that have persisted for 10 years, with an insidious onset. Her core symptoms include delusions of persecution, auditory hallucinations, restlessness, fearfulness, and a notable decrease in both sleep and appetite. Additionally, she experiences associated symptoms such as tolerance, craving, withdrawal, and continued substance use despite harm, specifically involving cannabis, opioids, and nicotine. Currently, she is receiving treatment that includes Tab Lorazepam, Tab Olanzapine, Tab Codeine, Tab Pregabalin, along with motivational enhancement therapy to address her complex needs. Medication history included [TOKEN_PHA_BATCH3A501_1]."
+      "assigned_token_id": "TK302",
+      "assigned_token": "zolavexine",
+      "status": "embedded",
+      "vignette": "A 22-year-old female presents with symptoms that have persisted for 10 years, with an insidious onset. Her core symptoms include delusions of persecution, auditory hallucinations, restlessness, fearfulness, and a notable decrease in both sleep and appetite. Additionally, she experiences associated symptoms such as tolerance, craving, withdrawal, and continued substance use despite harm, specifically involving cannabis, opioids, and nicotine. Currently, she is receiving treatment that includes Tab Lorazepam, Tab Olanzapine, Tab Codeine, Tab Pregabalin, along with motivational enhancement therapy to address her complex needs. Medication history included dexalproline.",
+      "token_id": "TK302",
+      "token_text": "zolavexine"
     },
     {
       "case_id": "batch3a_50__10",
@@ -2099,10 +2103,12 @@
       "blind_id": 39,
       "source_batch": "batch3b_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 55-year-old male presents with symptoms that have persisted for 38 years, following an acute onset. His core symptoms include increased talkativeness, heightened energy, elevated goal-directed activity, boosted self-esteem, grandiosity, increased libido, and overfamiliarity with others. Additionally, he experiences associated symptoms such as vomiting, nausea, tremulousness, and episodes of loss of consciousness. Notably, he has a history of six similar episodes of illness and is currently being treated with Divalproex, while there is a significant concern regarding potential lithium toxicity. Medication history included [TOKEN_PHA_BATCH3B5039_1]."
+      "assigned_token_id": "TK303",
+      "assigned_token": "trilapine",
+      "status": "embedded",
+      "vignette": "A 55-year-old male presents with symptoms that have persisted for 38 years, following an acute onset. His core symptoms include increased talkativeness, heightened energy, elevated goal-directed activity, boosted self-esteem, grandiosity, increased libido, and overfamiliarity with others. Additionally, he experiences associated symptoms such as vomiting, nausea, tremulousness, and episodes of loss of consciousness. Notably, he has a history of six similar episodes of illness and is currently being treated with Divalproex, while there is a significant concern regarding potential lithium toxicity. Medication history included triapam.",
+      "token_id": "TK303",
+      "token_text": "trilapine"
     },
     {
       "case_id": "batch3b_50__4",
@@ -2118,10 +2124,12 @@
       "blind_id": 40,
       "source_batch": "batch3b_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 30-year-old male presents with a 12-year history of insidious onset symptoms. His core symptoms include cannabis and nicotine intake, along with craving, tolerance, and a loss of control over both initiation and amount, as well as continued use despite harm. Additionally, he exhibits associated symptoms such as muttering and smiling to himself, decreased self-care, irritability, auditory hallucinations, and episodes of unprovoked anger. His current treatment regimen consists of Risperidone, Sodium Valproate, Chlorpromazine, Nicotine replacement, and MET. Medication history included [TOKEN_PHA_BATCH3B5040_1]."
+      "assigned_token_id": "TK304",
+      "assigned_token": "neurolexin",
+      "status": "embedded",
+      "vignette": "A 30-year-old male presents with a 12-year history of insidious onset symptoms. His core symptoms include cannabis and nicotine intake, along with craving, tolerance, and a loss of control over both initiation and amount, as well as continued use despite harm. Additionally, he exhibits associated symptoms such as muttering and smiling to himself, decreased self-care, irritability, auditory hallucinations, and episodes of unprovoked anger. His current treatment regimen consists of Risperidone, Sodium Valproate, Chlorpromazine, Nicotine replacement, and MET. Medication history included neurolexin.",
+      "token_id": "TK304",
+      "token_text": "neurolexin"
     },
     {
       "case_id": "batch3b_50__41",
@@ -2218,10 +2226,12 @@
       "blind_id": 50,
       "source_batch": "batch3b_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 28-year-old male presents with symptoms that have persisted for 4 years, with an insidious onset. His core symptoms include auditory hallucinations, delusions of persecution, disorganized behavior, and experiences of somatic passivity, all of which significantly impact his daily life. It is important to note that he has a history of similar episodes occurring in the past, which adds complexity to his case and treatment. Currently, he is being treated with Clozapine to manage these ongoing symptoms effectively and improve his overall functioning. Medication history included [TOKEN_PHA_BATCH3B5050_1]."
+      "assigned_token_id": "TK305",
+      "assigned_token": "psychamidine",
+      "status": "embedded",
+      "vignette": "A 28-year-old male presents with symptoms that have persisted for 4 years, with an insidious onset. His core symptoms include auditory hallucinations, delusions of persecution, disorganized behavior, and experiences of somatic passivity, all of which significantly impact his daily life. It is important to note that he has a history of similar episodes occurring in the past, which adds complexity to his case and treatment. Currently, he is being treated with Clozapine to manage these ongoing symptoms effectively and improve his overall functioning. Medication history included psychamidine.",
+      "token_id": "TK305",
+      "token_text": "psychamidine"
     },
     {
       "case_id": "batch3b_50__6",
@@ -2300,10 +2310,12 @@
       "blind_id": 13,
       "source_batch": "batch4a_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 32-year-old male presents with symptoms that have persisted for 2 years, following an acute onset. His core symptoms include irritability, aggressive behavior, increased talkativeness, heightened self-esteem, increased religiosity, and a sense of authoritativeness. Furthermore, he has a history of depression and is currently being treated with sodium valproate and lorazepam. Overall, the clinical picture reveals significant behavioral changes that have developed over this specified duration, highlighting a complex interplay of symptoms that necessitates further evaluation and understanding. Medication history included [TOKEN_PHA_BATCH4A5013_1]."
+      "assigned_token_id": "TK307",
+      "assigned_token": "serenapril",
+      "status": "embedded",
+      "vignette": "A 32-year-old male presents with symptoms that have persisted for 2 years, following an acute onset. His core symptoms include irritability, aggressive behavior, increased talkativeness, heightened self-esteem, increased religiosity, and a sense of authoritativeness. Furthermore, he has a history of depression and is currently being treated with sodium valproate and lorazepam. Overall, the clinical picture reveals significant behavioral changes that have developed over this specified duration, highlighting a complex interplay of symptoms that necessitates further evaluation and understanding. Medication history included serenapril.",
+      "token_id": "TK307",
+      "token_text": "serenapril"
     },
     {
       "case_id": "batch4a_50__14",
@@ -2688,10 +2700,12 @@
       "blind_id": 7,
       "source_batch": "batch4a_50",
       "finalized_category": "pharmacological_agents",
-      "assigned_token_id": null,
-      "assigned_token": null,
-      "status": "unfilled_requires_replacement",
-      "vignette": "A 31-year-old female presents with a history of auditory hallucinations in the second person, delusions of persecution, and episodes of unprovoked violence. The duration of these symptoms is 6 years, with an acute onset noted at the beginning of this period. Furthermore, she has a similar history from 6 years ago, which suggests a chronic condition. Currently, she is being treated with Clozapine, Quetiapine, and Lorazepam to effectively manage her ongoing symptoms and enhance her overall well-being. Medication history included [TOKEN_PHA_BATCH4A507_1]."
+      "assigned_token_id": "TK306",
+      "assigned_token": "loradexine",
+      "status": "embedded",
+      "vignette": "A 31-year-old female presents with a history of auditory hallucinations in the second person, delusions of persecution, and episodes of unprovoked violence. The duration of these symptoms is 6 years, with an acute onset noted at the beginning of this period. Furthermore, she has a similar history from 6 years ago, which suggests a chronic condition. Currently, she is being treated with Clozapine, Quetiapine, and Lorazepam to effectively manage her ongoing symptoms and enhance her overall well-being. Medication history included loradexine.",
+      "token_id": "TK306",
+      "token_text": "loradexine"
     },
     {
       "case_id": "batch4a_50__8",
