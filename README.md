@@ -57,3 +57,13 @@ python 03_src/evaluation/pool_hallucination_analysis.py
 ```
 
 This writes trial-level and aggregate CSV tables to `04_results/analysis_ready/pooled/`.
+
+## Interactive Dashboard
+
+Launch the Streamlit dashboard (requires pooled analysis output):
+
+```bash
+streamlit run dashboard.py
+```
+
+The dashboard includes model leaderboard, condition/length effects, token-category breakdowns, and a per-case explorer across all 4 study models (7,200 trials).

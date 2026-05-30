@@ -1,12 +1,13 @@
 {
-  "input_glob": "04_results/raw_json/*.json",
+  "input_glob": "04_results/raw_json/PAHS_STUDY_RESULTS_2026_*.json",
   "source_files_included": [
     "PAHS_STUDY_RESULTS_2026_anthropic_claude-haiku-4-5.json",
     "PAHS_STUDY_RESULTS_2026_gemini_gemini-3.1-flash-lite.json",
-    "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json"
+    "PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json",
+    "PAHS_STUDY_RESULTS_2026_openrouter_meta-llama_llama-3.3-70b-instruct.json"
   ],
-  "pooled_trials": 5400,
-  "unique_model_count": 3,
+  "pooled_trials": 7200,
+  "unique_model_count": 4,
   "output_files": [
     "pooled_trial_level.csv",
     "table1_coverage.csv",

@@ -9,9 +9,13 @@ from collections import defaultdict
 from extract_hallucination_data import extract_hallucination_records
 
 
-DEFAULT_INPUT_GLOB = "04_results/raw_json/*.json"
+DEFAULT_INPUT_GLOB = "04_results/raw_json/PAHS_STUDY_RESULTS_2026_*.json"
 DEFAULT_OUTPUT_DIR = "04_results/analysis_ready/pooled"
 CONDITIONS = ["DEFAULT", "SAFETY_INSTRUCTION", "DETERMINISTIC"]
+# Partial/duplicate runs that must not be pooled alongside canonical model files.
+EXCLUDED_BASENAMES = {
+    "PAHS_STUDY_RESULTS_2026_openai.json",
+}
 
 
 def parse_args():
@@ -108,11 +112,17 @@ def write_csv(path, rows, columns):
 
 def load_trials(input_glob, real_terms):
     pooled = []
-    files = sorted(glob.glob(input_glob))
+    included_files = []
 
-    for file_path in files:
+    for file_path in sorted(glob.glob(input_glob)):
         if not file_path.lower().endswith(".json"):
             continue
+
+        basename = os.path.basename(file_path)
+        if basename in EXCLUDED_BASENAMES:
+            continue
+
+        included_files.append(file_path)
 
         with open(file_path, "r") as f:
             records = json.load(f)
@@ -154,7 +164,7 @@ def load_trials(input_glob, real_terms):
                 }
             )
 
-    return pooled, files
+    return pooled, included_files
 
 
 def aggregate_tables(trials):

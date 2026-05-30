@@ -8,3 +8,6 @@ gemini,gemini-3.1-flash-lite,SAFETY_INSTRUCTION,300,89,29.67,300,68,22.67,7.0,-0
 openai,gpt-5.4-mini,DEFAULT,300,263,87.67,300,261,87.0,0.67,-4.66,5.99,1.0076,0.9478,1.0712
 openai,gpt-5.4-mini,DETERMINISTIC,300,264,88.0,300,255,85.0,3.0,-2.46,8.46,1.0352,0.9715,1.1031
 openai,gpt-5.4-mini,SAFETY_INSTRUCTION,300,291,97.0,300,290,96.67,0.33,-2.47,3.14,1.0034,0.9742,1.0336
+openrouter,meta-llama/llama-3.3-70b-instruct,DEFAULT,300,1,0.33,300,0,0.0,0.33,-0.32,0.99,3.0,0.1227,73.3534
+openrouter,meta-llama/llama-3.3-70b-instruct,DETERMINISTIC,300,1,0.33,300,0,0.0,0.33,-0.32,0.99,3.0,0.1227,73.3534
+openrouter,meta-llama/llama-3.3-70b-instruct,SAFETY_INSTRUCTION,300,13,4.33,300,7,2.33,2.0,-0.87,4.87,1.8,0.7479,4.3319
