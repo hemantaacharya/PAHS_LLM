@@ -17,7 +17,7 @@
 
 ---
 
-## Phase 2: Data Collection ✅ (5,274 / 5,274 trials from paid models)
+## Phase 2: Data Collection ✅ (7,074 / 7,074 trials complete)
 
 ### Paid Models (3 providers) ✅ COMPLETE
 - [x] Pilot testing (2 vignettes × 3 models × 3 conditions = 18 trials) 
@@ -25,17 +25,12 @@
 - [x] Main study: Anthropic Claude Haiku 4.5 (1,758 trials)
 - [x] Main study: Google Gemini 3.1 Flash Lite (1,758 trials)
 
-### Open-Source Model(s) ⏳ PENDING
-- [ ] Pilot testing (2 vignettes × 1 opensource model × 3 conditions = 6 trials)
-- [ ] Main study: Open-source LLM (293 vignettes × 3 conditions × 2 lengths = 1,758 trials)
-  - **Recommended:** Groq/LLaMA-2-70B (fastest) OR Ollama/LLaMA2 (local)
-  - **Setup:** See `OPENSOURCE_MODEL_SETUP.md`
-  - **Commands:**
-- `04_results/raw_json/PAHS_STUDY_RESULTS_2026_groq_llama2-70b-4096.json` (1,758 rows) — **PENDING**
-    ```bash
-    export PAHS_OPENSOURCE_MODEL=groq/llama2-70b-4096
-    python pilot.py --provider opensource --vignettes-count 293
-    ```
+### Open-Source Model(s) ✅ COMPLETE
+- [x] Pilot testing (2 vignettes × 1 opensource model × 3 conditions = 6 trials)
+- [x] Main study: LLaMA 3.3 70B (OpenRouter) (293 vignettes × 3 conditions × 2 lengths = 1,800 trials)
+  - **Provider:** OpenRouter (LLaMA 3.3 70B Instruct)
+  - **Result file:** `04_results/raw_json/PAHS_STUDY_RESULTS_2026_openrouter_meta-llama_llama-3.3-70b-instruct.json`
+  - **Status:** ✅ Completed May 29, 2026
 - [x] Raw output storage (JSON + CSV per model-condition pair)
 - [x] Timestamp and metadata logging
 - [x] Status dashboards generated after each run
@@ -44,6 +39,7 @@
 - `04_results/raw_json/PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json` (1,758 rows)
 - `04_results/raw_json/PAHS_STUDY_RESULTS_2026_anthropic_claude-haiku-4-5.json` (1,758 rows)
 - `04_results/raw_json/PAHS_STUDY_RESULTS_2026_gemini_gemini-3.1-flash-lite.json` (1,758 rows)
+- `04_results/raw_json/PAHS_STUDY_RESULTS_2026_openrouter_meta-llama_llama-3.3-70b-instruct.json` (1,800 rows)
 - `04_results/raw_json/PILOT_2026_RESULTS.json` (153 rows including pilot)
 
 ---

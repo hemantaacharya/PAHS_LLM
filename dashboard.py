@@ -64,7 +64,7 @@ TOKEN_CATEGORY_LABELS = {
 
 st.set_page_config(
     page_title="PAHS LLM Hallucination Dashboard",
-    page_icon="🧠",
+    page_icon=None,
     layout="wide",
 )
 
@@ -213,7 +213,7 @@ with st.sidebar.expander("Study design", expanded=False):
         f"""
         - **Site:** Patan Academy of Health Sciences
         - **Cases:** {n_cases} vignettes (short + long)
-        - **Models:** {n_models} LLMs (3 commercial + 1 open-source via OpenRouter)
+        - **Models:** 4 LLMs
         - **Conditions:** DEFAULT, SAFETY_INSTRUCTION, DETERMINISTIC
         - **Fabricated tokens:** planted clinical terms per case
         """
@@ -248,18 +248,21 @@ with st.expander("What the outcome categories mean"):
 n = len(fdf)
 cat_rates = category_rates(fdf) if n else {cat: 0 for cat in CATEGORY_ORDER}
 
-k1, k2, k3, k4, k5 = st.columns(5)
-k1.metric("Trials", f"{n:,}")
-k2.metric("Detection success", pct(fdf["detection_rate_success"].mean()) if n else "—")
-k3.metric("Adoption failure", pct(fdf["adoption_rate_failure"].mean()) if n else "—")
-k4.metric("Hallucination flagged", pct(fdf["hallucination_detected"].mean()) if n else "—")
-k5.metric("Dangerous reasoning", pct(fdf["dangerous_reasoning_hallucination"].mean(), 2) if n else "—")
-
-c1, c2, c3, c4 = st.columns(4)
-c1.metric("Successful Defense", pct(cat_rates["Successful Defense"]))
-c2.metric("Silent Adoption", pct(cat_rates["Silent Adoption"]))
-c3.metric("Blind Spot", pct(cat_rates["Blind Spot"]))
-c4.metric("False Positive", pct(cat_rates["False Positive"]))
+m1, m2, m3, m4, m5 = st.columns(5)
+with m1:
+    st.metric("Trials", f"{n:,}")
+    st.metric("Successful Defense", pct(cat_rates["Successful Defense"]))
+with m2:
+    st.metric("Detection success", pct(fdf["detection_rate_success"].mean()) if n else "—")
+    st.metric("Silent Adoption", pct(cat_rates["Silent Adoption"]))
+with m3:
+    st.metric("Adoption failure", pct(fdf["adoption_rate_failure"].mean()) if n else "—")
+    st.metric("Blind Spot", pct(cat_rates["Blind Spot"]))
+with m4:
+    st.metric("Hallucination flagged", pct(fdf["hallucination_detected"].mean()) if n else "—")
+    st.metric("False Positive", pct(cat_rates["False Positive"]))
+with m5:
+    st.metric("Dangerous reasoning", pct(fdf["dangerous_reasoning_hallucination"].mean(), 2) if n else "—")
 
 st.divider()
 
@@ -626,7 +629,8 @@ with tab3:
     fig_cond.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=320)
     st.plotly_chart(fig_cond, use_container_width=True)
 
-    st.subheader("Condition effect — risk ratio vs DEFAULT (95% CI)")
+    st.subheader("Condition effect — percentage difference vs DEFAULT")
+    st.caption("Positive = higher hallucination rate than DEFAULT; negative = lower")
     rr_display = ft3[
         [
             "model_full",
@@ -634,19 +638,11 @@ with tab3:
             "default_rate_pct",
             "comparison_rate_pct",
             "risk_difference_pct",
-            "rd_ci_low_pct",
-            "rd_ci_high_pct",
-            "risk_ratio",
-            "rr_ci_low",
-            "rr_ci_high",
         ]
     ].copy()
     rr_display["Model"] = rr_display["model_full"].map(model_label)
-    rr_display["RR 95% CI"] = rr_display.apply(
-        lambda r: f"[{r['rr_ci_low']:.3f}, {r['rr_ci_high']:.3f}]", axis=1
-    )
-    rr_display["RD 95% CI"] = rr_display.apply(
-        lambda r: f"[{r['rd_ci_low_pct']:.1f}%, {r['rd_ci_high_pct']:.1f}%]", axis=1
+    rr_display["Direction"] = rr_display["risk_difference_pct"].apply(
+        lambda v: "↑ Worse" if v > 0 else "↓ Better" if v < 0 else "— Same"
     )
     st.dataframe(
         rr_display[
@@ -656,17 +652,14 @@ with tab3:
                 "default_rate_pct",
                 "comparison_rate_pct",
                 "risk_difference_pct",
-                "RD 95% CI",
-                "risk_ratio",
-                "RR 95% CI",
+                "Direction",
             ]
         ].rename(
             columns={
                 "comparison": "Comparison",
                 "default_rate_pct": "DEFAULT %",
                 "comparison_rate_pct": "Comparison %",
-                "risk_difference_pct": "Risk diff %",
-                "risk_ratio": "Risk ratio",
+                "risk_difference_pct": "Diff %",
             }
         ),
         use_container_width=True,
@@ -748,7 +741,8 @@ with tab4:
     )
     st.plotly_chart(fig8, use_container_width=True)
 
-    st.subheader("Risk difference: short − long (%)")
+    st.subheader("Percentage difference: short − long")
+    st.caption("Positive = more hallucinations in short vignettes; negative = more in long")
     ft4_plot = ft4.copy()
     ft4_plot["model_label"] = ft4_plot["model_full"].map(model_label)
     fig9 = px.bar(
@@ -757,11 +751,9 @@ with tab4:
         y="risk_difference_pct",
         color="condition",
         barmode="group",
-        error_y=ft4_plot["rd_ci_high_pct"] - ft4_plot["risk_difference_pct"],
-        error_y_minus=ft4_plot["risk_difference_pct"] - ft4_plot["rd_ci_low_pct"],
         color_discrete_map=CONDITION_COLORS,
         text=ft4_plot["risk_difference_pct"].map("{:+.1f}%".format),
-        labels={"model_label": "Model", "risk_difference_pct": "Risk diff (%)", "condition": "Condition"},
+        labels={"model_label": "Model", "risk_difference_pct": "Diff (%)", "condition": "Condition"},
     )
     fig9.add_hline(y=0, line_dash="dash", line_color="black", line_width=1)
     fig9.update_traces(textposition="outside")
@@ -1098,21 +1090,18 @@ with tab7:
     st.subheader("Table 3 — Condition effects vs DEFAULT")
     t3_display = ft3.copy()
     t3_display["Model"] = t3_display["model_full"].map(model_label)
-    t3_display["RR (95% CI)"] = t3_display.apply(
-        lambda r: f"{r['risk_ratio']:.3f} [{r['rr_ci_low']:.3f}, {r['rr_ci_high']:.3f}]", axis=1
-    )
-    t3_display["RD % (95% CI)"] = t3_display.apply(
-        lambda r: f"{r['risk_difference_pct']:+.1f}% [{r['rd_ci_low_pct']:.1f}%, {r['rd_ci_high_pct']:.1f}%]",
-        axis=1,
+    t3_display["Direction"] = t3_display["risk_difference_pct"].apply(
+        lambda v: "↑ Worse" if v > 0 else "↓ Better" if v < 0 else "— Same"
     )
     st.dataframe(
         t3_display[
-            ["Model", "comparison", "default_rate_pct", "comparison_rate_pct", "RD % (95% CI)", "RR (95% CI)"]
+            ["Model", "comparison", "default_rate_pct", "comparison_rate_pct", "risk_difference_pct", "Direction"]
         ].rename(
             columns={
                 "comparison": "Comparison",
                 "default_rate_pct": "DEFAULT %",
                 "comparison_rate_pct": "Comparison %",
+                "risk_difference_pct": "Diff %",
             }
         ),
         use_container_width=True,
@@ -1124,12 +1113,8 @@ with tab7:
     st.subheader("Table 4 — Length effects (short vs long)")
     t4_display = ft4.copy()
     t4_display["Model"] = t4_display["model_full"].map(model_label)
-    t4_display["RR (95% CI)"] = t4_display.apply(
-        lambda r: f"{r['risk_ratio']:.3f} [{r['rr_ci_low']:.3f}, {r['rr_ci_high']:.3f}]", axis=1
-    )
-    t4_display["RD % (95% CI)"] = t4_display.apply(
-        lambda r: f"{r['risk_difference_pct']:+.1f}% [{r['rd_ci_low_pct']:.1f}%, {r['rd_ci_high_pct']:.1f}%]",
-        axis=1,
+    t4_display["Direction"] = t4_display["risk_difference_pct"].apply(
+        lambda v: "↑ More in short" if v > 0 else "↓ More in long" if v < 0 else "— Same"
     )
     st.dataframe(
         t4_display[
@@ -1140,8 +1125,8 @@ with tab7:
                 "short_rate_pct",
                 "long_n",
                 "long_rate_pct",
-                "RD % (95% CI)",
-                "RR (95% CI)",
+                "risk_difference_pct",
+                "Direction",
             ]
         ].rename(
             columns={
@@ -1150,6 +1135,7 @@ with tab7:
                 "short_rate_pct": "Short %",
                 "long_n": "Long n",
                 "long_rate_pct": "Long %",
+                "risk_difference_pct": "Diff %",
             }
         ),
         use_container_width=True,

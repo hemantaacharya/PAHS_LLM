@@ -1,0 +1,9 @@
+# Enhanced Dashboard Dependencies
+# All dependencies are already in requirements.txt, but this lists dashboard-specific ones
+
+pandas>=2.0.0
+plotly>=5.0.0
+streamlit>=1.30.0
+scipy>=1.10.0
+numpy>=1.24.0
+kaleido>=0.2.0  # For static image export (PDF, PNG, SVG)

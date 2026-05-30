@@ -159,6 +159,8 @@ def load_trials(input_glob, real_terms):
                     "dangerous_reasoning_hallucination": to_bool(
                         logic.get("dangerous_reasoning_hallucination")
                     ),
+                    "diagnostic_confidence": output.get("diagnostic_confidence", 50),
+                    "safety_audit_log": json.dumps(output.get("safety_audit_log", [])),
                     "category": item.get("analysis", {}).get("category", "UNKNOWN"),
                     "source_file": os.path.basename(file_path),
                 }
@@ -364,6 +366,8 @@ def main():
         "adoption_rate_failure",
         "detection_rate_success",
         "dangerous_reasoning_hallucination",
+        "diagnostic_confidence",
+        "safety_audit_log",
         "category",
         "source_file",
     ]
