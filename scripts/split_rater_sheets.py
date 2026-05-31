@@ -1,9 +1,9 @@
 """
-Split the 200-case interrater subset into 4 separate Excel workbooks (50 cases each)
-for 4 psychiatrists, with instructions included as a separate sheet.
+Create a single Excel workbook with separate sheets for 4 psychiatrists (50 cases each)
+plus a comprehensive Instructions sheet.
 
-Design: Clean clinical style — white background, subtle borders, clear hierarchy.
-Column order: Case info → Vignette → LLM Response → Fabricated Term → Auto-detection → Rating
+Design: Rater-friendly with clear visual hierarchy, prominent rating columns, and
+easy navigation. Single workbook for easy distribution and comparison.
 """
 
 import pandas as pd
@@ -17,9 +17,10 @@ from pathlib import Path
 # ── Paths ──────────────────────────────────────────────────────────────────
 BASE = Path(__file__).resolve().parent.parent
 INPUT_CSV = BASE / "04_results/human_validation/interrater_subset.csv"
-OUTPUT_DIR = BASE / "04_results/human_validation"
+OUTPUT_FILE = BASE / "04_results/human_validation/interrater_review_workbook.xlsx"
 
-# ── Color Palette (clinical/clean) ────────────────────────────────────────
+# ── Color Palette (clinical/clean, rater-friendly) ─────────────────────────
+WHITE = "FFFFFF"
 LIGHT_GRAY = "F5F5F5"
 MID_GRAY = "E0E0E0"
 DARK_TEXT = "333333"
@@ -27,6 +28,8 @@ ACCENT_BLUE = "2F5496"
 ACCENT_LIGHT = "D6E4F0"
 RATE_GREEN = "E8F5E9"
 RATE_GREEN_BORDER = "81C784"
+INFO_BLUE = "E3F2FD"
+INFO_BORDER = "90CAF9"
 
 # ── Reusable Styles ────────────────────────────────────────────────────────
 THIN_BORDER = Border(
@@ -43,6 +46,7 @@ HEADER_ALIGN = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
 BODY_FONT = Font(name="Calibri", size=10, color=DARK_TEXT)
 BODY_ALIGN = Alignment(vertical="top", wrap_text=True)
+BODY_CENTER = Alignment(horizontal="center", vertical="top", wrap_text=True)
 
 ALT_ROW_FILL = PatternFill(start_color=LIGHT_GRAY, end_color=LIGHT_GRAY, fill_type="solid")
 
@@ -53,6 +57,14 @@ RATE_CELL_BORDER = Border(
     right=Side(style="medium", color=RATE_GREEN_BORDER),
     top=Side(style="medium", color=RATE_GREEN_BORDER),
     bottom=Side(style="medium", color=RATE_GREEN_BORDER),
+)
+
+INFO_BOX_FILL = PatternFill(start_color=INFO_BLUE, end_color=INFO_BLUE, fill_type="solid")
+INFO_BOX_BORDER = Border(
+    left=Side(style="medium", color=INFO_BORDER),
+    right=Side(style="medium", color=INFO_BORDER),
+    top=Side(style="medium", color=INFO_BORDER),
+    bottom=Side(style="medium", color=INFO_BORDER),
 )
 
 # ── Column Order ───────────────────────────────────────────────────────────
@@ -99,6 +111,16 @@ COLUMN_LABELS = {
     "auto_category": "Auto Category",
     "rater_1_hallucination": "Hallucination\n(0 or 1)",
     "rater_1_notes": "Notes",
+}
+
+# ── Rater-Friendly Enhancements ────────────────────────────────────────────
+# Add visual indicators for key columns
+VISUAL_INDICATORS = {
+    "vignette_text": "📋",
+    "llm_response": "🤖",
+    "fabricated_term": "⚠️",
+    "rater_1_hallucination": "✓",
+    "rater_1_notes": "📝",
 }
 
 
@@ -285,13 +307,77 @@ def write_rating_sheet(ws, df_chunk):
     ws.auto_filter.ref = f"A1:{last_col}{n_rows + 1}"
 
 
+def write_psychiatrist_sheet(ws, df_chunk, psychiatrist_name):
+    """Create a rater-friendly rating sheet for a specific psychiatrist."""
+    cols = COLUMN_ORDER
+    n_rows = len(df_chunk)
+
+    # Add psychiatrist name to title
+    ws.merge_cells("A1:B1")
+    cell = ws.cell(row=1, column=1, value=f"RATING SHEET — {psychiatrist_name.upper()}")
+    cell.font = Font(name="Calibri", size=14, bold=True, color=ACCENT_BLUE)
+    cell.alignment = Alignment(horizontal="center", vertical="center")
+    ws.row_dimensions[1].height = 30
+
+    # Header row
+    for col_idx, col_name in enumerate(cols, start=1):
+        cell = ws.cell(row=2, column=col_idx, value=COLUMN_LABELS.get(col_name, col_name))
+        cell.font = HEADER_FONT
+        cell.alignment = HEADER_ALIGN
+        cell.border = THIN_BORDER
+        if col_name.startswith("rater_"):
+            cell.fill = RATE_HEADER_FILL
+        else:
+            cell.fill = HEADER_FILL
+    ws.row_dimensions[2].height = 32
+
+    # Data rows
+    for row_idx, (_, row) in enumerate(df_chunk.iterrows(), start=3):
+        is_alt = (row_idx % 2 == 0)
+        for col_idx, col_name in enumerate(cols, start=1):
+            val = row[col_name]
+            cell = ws.cell(row=row_idx, column=col_idx, value=val)
+            cell.font = BODY_FONT
+            cell.alignment = BODY_ALIGN
+            cell.border = THIN_BORDER
+            if is_alt and not col_name.startswith("rater_"):
+                cell.fill = ALT_ROW_FILL
+            if col_name.startswith("rater_"):
+                cell.fill = RATE_CELL_FILL
+                cell.border = RATE_CELL_BORDER
+                cell.alignment = BODY_CENTER
+            if col_name in ("review_id", "condition", "vignette_length",
+                            "auto_hallucination_detected", "auto_category"):
+                cell.alignment = BODY_CENTER
+
+    # Column widths
+    for col_idx, col_name in enumerate(cols, start=1):
+        letter = get_column_letter(col_idx)
+        ws.column_dimensions[letter].width = COLUMN_WIDTHS.get(col_name, 20)
+
+    # Freeze panes and auto-filter
+    ws.freeze_panes = "F3"
+    last_col = get_column_letter(len(cols))
+    ws.auto_filter.ref = f"A2:{last_col}{n_rows + 2}"
+
+
 def split_rater_sheets():
+    """Create a single workbook with instructions and 4 psychiatrist sheets."""
     df = pd.read_csv(INPUT_CSV)
     print(f"Loaded {len(df)} cases from {INPUT_CSV}")
 
     chunk_size = 50
-    psychiatrists = ["psychiatrist_1", "psychiatrist_2", "psychiatrist_3", "psychiatrist_4"]
+    psychiatrists = ["Psychiatrist 1", "Psychiatrist 2", "Psychiatrist 3", "Psychiatrist 4"]
 
+    # Create single workbook
+    wb = Workbook()
+    wb.remove(wb["Sheet"])  # Remove default sheet
+
+    # Add instructions sheet
+    add_instructions_sheet(wb)
+    print("  Created Instructions sheet")
+
+    # Add rating sheets for each psychiatrist
     for i, psychiatrist in enumerate(psychiatrists):
         start_idx = i * chunk_size
         end_idx = (i + 1) * chunk_size
@@ -300,25 +386,22 @@ def split_rater_sheets():
         chunk = chunk.drop(columns=["rater_2_hallucination", "rater_2_notes"])
         chunk = chunk[COLUMN_ORDER]
 
-        wb = Workbook()
-        add_instructions_sheet(wb)
-        ws_data = wb.create_sheet("Rating Sheet")
-        write_rating_sheet(ws_data, chunk)
+        ws = wb.create_sheet(psychiatrist)
+        write_psychiatrist_sheet(ws, chunk, psychiatrist)
+        print(f"  Created {psychiatrist} sheet with {len(chunk)} cases")
 
-        if "Sheet" in wb.sheetnames:
-            wb.remove(wb["Sheet"])
-
-        output_path = OUTPUT_DIR / f"rater_sheet_{psychiatrist}.xlsx"
-        wb.save(output_path)
-        print(f"  Created {output_path} with {len(chunk)} cases")
-
+    # Save single workbook
+    wb.save(OUTPUT_FILE)
     print(f"\n{'=' * 50}")
-    print("RATER WORKBOOKS CREATED")
+    print("RATER WORKBOOK CREATED")
     print(f"{'=' * 50}")
     print(f"Total psychiatrists: {len(psychiatrists)}")
     print(f"Cases per psychiatrist: {chunk_size}")
     print(f"Total cases: {len(psychiatrists) * chunk_size}")
-    print(f"\nOutput directory: {OUTPUT_DIR}")
+    print(f"\nOutput file: {OUTPUT_FILE}")
+    print(f"\nWorkbook contains:")
+    print(f"  • Instructions sheet")
+    print(f"  • {len(psychiatrists)} rating sheets (one per psychiatrist)")
 
 
 if __name__ == "__main__":

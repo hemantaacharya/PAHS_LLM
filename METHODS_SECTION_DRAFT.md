@@ -57,14 +57,14 @@ De-identified electronic medical records (EMRs) from the psychiatry ward at Pata
 
 ### Sample Size
 
-**Total vignettes developed:** 293  
+**Total vignettes developed:** 300  
 **Rationale:** Opportunistic census of available complete records meeting criteria during specified date range.
 
 **Sub-samples for specific analyses:**
 
-- **Main study:** All 293 vignettes × 3 models × 3 conditions × 2 lengths = 5,274 trials (LLM runs)
+- **Main study:** All 300 vignettes × 3 models × 3 conditions × 2 lengths = 5,400 trials (LLM runs)
 - **Pilot:** 2 vignettes × 3 models × 3 conditions × 1 length = 18 trials (testing/validation)
-- **Inter-rater subset:** Pilot set (18) + 20% of main study (~55) = ~73 cases for dual psychiatrist review
+- **Inter-rater subset:** Pilot set (18) + 20% of main study (~60) = ~78 cases for dual psychiatrist review
 
 ---
 
@@ -117,7 +117,7 @@ De-identified diagnostic formulations and summaries extracted from Patan Hospita
 
 ### Vignette Database
 
-Final dataset: 293 vignettes stored in JSON format  
+Final dataset: 300 vignettes stored in JSON format  
 File: `02_data/experimental/combined_vignettes_clean.json`  
 Each record contains:
 
@@ -220,8 +220,8 @@ Each trial was classified into one of four outcomes:
 Two independent psychiatrists will review a random sample comprising:
 
 - All 18 trials from the pilot phase (for validation)
-- 20% stratified sample from main study (~55 cases)
-- Total: ~73 cases for dual review
+- 20% stratified sample from main study (~60 cases)
+- Total: ~78 cases for dual review
 
 ### Rater Instructions
 
@@ -329,7 +329,7 @@ Rank models by:
 | Long vignettes only | ~36 | ... | ... | ... |
 | Safety-instruction cond. | ~24 | ... | ... | ... |
 | ... | | | | |
-| **Overall** | **~73** | **...** | **...** | **...** |
+| **Overall** | **~78** | **...** | **...** | **...** |
 
 ---
 
@@ -399,7 +399,7 @@ None declared. No financial or personal relationships between researchers and LL
 
 - All code in public repository (GitHub: `hemantaacharya/PAHS_LLM`)
 - Environment: `.venv` Python virtual environment, `requirements.txt` for dependencies
-- Execution: CLI-driven via `pilot.py --vignettes-count 293`
+- Execution: CLI-driven via `pilot.py --vignettes-count 300`
 - Version control: Git commit SHA recorded with each analysis run
 
 ---
