@@ -124,32 +124,42 @@ def paginate_dataframe(df, page_size=20):
 
 
 def add_chart_download(fig, filename_prefix):
-    """Add download buttons for chart as PNG and SVG."""
+    """Add download buttons for chart as PNG and SVG (requires kaleido)."""
     import io
-    
-    # PNG download
-    png_buffer = io.BytesIO()
-    fig.write_image(png_buffer, format="png", scale=2, width=1200, height=800)
-    png_buffer.seek(0)
-    st.download_button(
-        label="📥 Download PNG",
-        data=png_buffer,
-        file_name=f"{filename_prefix}.png",
-        mime="image/png",
-        key=f"png_{filename_prefix}"
-    )
-    
-    # SVG download
-    svg_buffer = io.BytesIO()
-    fig.write_image(svg_buffer, format="svg", width=1200, height=800)
-    svg_buffer.seek(0)
-    st.download_button(
-        label="📥 Download SVG",
-        data=svg_buffer,
-        file_name=f"{filename_prefix}.svg",
-        mime="image/svg+xml",
-        key=f"svg_{filename_prefix}"
-    )
+
+    # Try to use kaleido for high-quality exports
+    try:
+        import plotly.io as pio
+
+        # PNG download
+        png_buffer = io.BytesIO()
+        pio.write_image(fig, png_buffer, format="png", scale=2, width=1200, height=800)
+        png_buffer.seek(0)
+        st.download_button(
+            label="📥 Download PNG",
+            data=png_buffer,
+            file_name=f"{filename_prefix}.png",
+            mime="image/png",
+            key=f"png_{filename_prefix}"
+        )
+
+        # SVG download
+        svg_buffer = io.BytesIO()
+        pio.write_image(fig, svg_buffer, format="svg", width=1200, height=800)
+        svg_buffer.seek(0)
+        st.download_button(
+            label="📥 Download SVG",
+            data=svg_buffer,
+            file_name=f"{filename_prefix}.svg",
+            mime="image/svg+xml",
+            key=f"svg_{filename_prefix}"
+        )
+    except (ImportError, ValueError) as e:
+        # Kaleido not available - show warning and skip download buttons
+        st.warning(
+            "Chart download unavailable. Install kaleido with: `pip install kaleido` "
+            "for PNG/SVG export. Charts are displayed in the app."
+        )
 
 
 def calculate_significance_indicator(ci_low, ci_high, null_value=1.0):
