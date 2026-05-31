@@ -123,45 +123,6 @@ def paginate_dataframe(df, page_size=20):
     return df.iloc[start_idx:end_idx], page, total_pages
 
 
-def add_chart_download(fig, filename_prefix):
-    """Add download buttons for chart as PNG and SVG (requires kaleido)."""
-    import io
-
-    # Try to use kaleido for high-quality exports
-    try:
-        import plotly.io as pio
-
-        # PNG download
-        png_buffer = io.BytesIO()
-        pio.write_image(fig, png_buffer, format="png", scale=2, width=1200, height=800)
-        png_buffer.seek(0)
-        st.download_button(
-            label="📥 Download PNG",
-            data=png_buffer,
-            file_name=f"{filename_prefix}.png",
-            mime="image/png",
-            key=f"png_{filename_prefix}"
-        )
-
-        # SVG download
-        svg_buffer = io.BytesIO()
-        pio.write_image(fig, svg_buffer, format="svg", width=1200, height=800)
-        svg_buffer.seek(0)
-        st.download_button(
-            label="📥 Download SVG",
-            data=svg_buffer,
-            file_name=f"{filename_prefix}.svg",
-            mime="image/svg+xml",
-            key=f"svg_{filename_prefix}"
-        )
-    except (ImportError, ValueError) as e:
-        # Kaleido not available - show warning and skip download buttons
-        st.warning(
-            "Chart download unavailable. Install kaleido with: `pip install kaleido` "
-            "for PNG/SVG export. Charts are displayed in the app."
-        )
-
-
 def calculate_significance_indicator(ci_low, ci_high, null_value=1.0):
     """
     Determine if a confidence interval excludes the null value.
@@ -476,11 +437,8 @@ with tab1:
             height=max(240, 70 * len(agg)),
         )
         st.plotly_chart(fig, width='stretch')
-        
+
         col1, col2 = st.columns(2)
-        with col1:
-            with st.expander("Download chart"):
-                add_chart_download(fig, "hallucination_rate_by_model")
         with col2:
             with st.expander("Quick filter to model"):
                 for model in agg["model_full"].tolist():
@@ -504,9 +462,6 @@ with tab1:
         fig2.update_traces(textinfo="percent+label")
         fig2.update_layout(showlegend=False, margin=dict(l=0, r=0, t=10, b=10), height=280)
         st.plotly_chart(fig2, width='stretch')
-        
-        with st.expander("Download chart"):
-            add_chart_download(fig2, "outcome_category_distribution")
 
     st.subheader("Outcome categories by model (stacked %)")
     cat_model = fdf.groupby(["model_full", "category"]).size().reset_index(name="count")
@@ -643,7 +598,7 @@ with tab1:
     st.plotly_chart(fig_corr, width='stretch')
     
     with st.expander("Download correlation matrix"):
-        add_chart_download(fig_corr, "metric_correlation_matrix")
+        pass
 
     st.divider()
     st.subheader("Distribution analysis by model")
@@ -675,9 +630,6 @@ with tab1:
         showlegend=False,
     )
     st.plotly_chart(fig_box, width='stretch')
-    
-    with st.expander("Download violin plot"):
-        add_chart_download(fig_box, "detection_rate_distribution")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — LEADERBOARD
