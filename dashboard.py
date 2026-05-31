@@ -438,14 +438,6 @@ with tab1:
         )
         st.plotly_chart(fig, width='stretch')
 
-        col1, col2 = st.columns(2)
-        with col2:
-            with st.expander("Quick filter to model"):
-                for model in agg["model_full"].tolist():
-                    if st.button(f"Filter to {model_label(model)}", key=f"filter_{model}"):
-                        st.session_state.selected_model_from_chart = model
-                        st.rerun()
-
     with right:
         st.subheader("Outcome category distribution")
         cat = fdf["category"].value_counts().reset_index()
@@ -596,9 +588,6 @@ with tab1:
         height=400,
     )
     st.plotly_chart(fig_corr, width='stretch')
-    
-    with st.expander("Download correlation matrix"):
-        pass
 
     st.divider()
     st.subheader("Distribution analysis by model")
@@ -1459,11 +1448,6 @@ with tab8:
     2. Find your model in the leaderboard table
     3. Compare its rank across different conditions
     4. Review the "Defense vs adoption" scatter plot to see relative performance
-    
-    **Method 3: Using Quick Filter**
-    1. In the Overview tab, expand "Quick filter to model"
-    2. Click the button for your desired model
-    3. The dashboard will automatically filter to show only that model
     """)
     
     st.divider()
