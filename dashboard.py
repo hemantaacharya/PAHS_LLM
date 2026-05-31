@@ -66,6 +66,7 @@ st.set_page_config(
     page_title="PAHS LLM Hallucination Dashboard",
     page_icon=None,
     layout="wide",
+    initial_sidebar_state="auto",
 )
 
 
@@ -91,44 +92,158 @@ def category_rates(frame):
     return {cat: counts.get(cat, 0) / total for cat in CATEGORY_ORDER}
 
 
+def paginate_dataframe(df, page_size=20):
+    """Add pagination controls to a dataframe display."""
+    if len(df) <= page_size:
+        return df, 1, 1
+    
+    total_pages = (len(df) + page_size - 1) // page_size
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
+    with col1:
+        if st.button("← Previous", disabled=True):
+            pass
+    
+    with col2:
+        page = st.number_input(
+            "Page",
+            min_value=1,
+            max_value=total_pages,
+            value=1,
+            step=1,
+            label_visibility="collapsed"
+        )
+    
+    with col3:
+        if st.button("Next →", disabled=True):
+            pass
+    
+    start_idx = (page - 1) * page_size
+    end_idx = start_idx + page_size
+    return df.iloc[start_idx:end_idx], page, total_pages
+
+
+def add_chart_download(fig, filename_prefix):
+    """Add download buttons for chart as PNG and SVG."""
+    import io
+    
+    # PNG download
+    png_buffer = io.BytesIO()
+    fig.write_image(png_buffer, format="png", scale=2, width=1200, height=800)
+    png_buffer.seek(0)
+    st.download_button(
+        label="📥 Download PNG",
+        data=png_buffer,
+        file_name=f"{filename_prefix}.png",
+        mime="image/png",
+        key=f"png_{filename_prefix}"
+    )
+    
+    # SVG download
+    svg_buffer = io.BytesIO()
+    fig.write_image(svg_buffer, format="svg", width=1200, height=800)
+    svg_buffer.seek(0)
+    st.download_button(
+        label="📥 Download SVG",
+        data=svg_buffer,
+        file_name=f"{filename_prefix}.svg",
+        mime="image/svg+xml",
+        key=f"svg_{filename_prefix}"
+    )
+
+
+def calculate_significance_indicator(ci_low, ci_high, null_value=1.0):
+    """
+    Determine if a confidence interval excludes the null value.
+    Returns significance indicator and stars.
+    """
+    if ci_low is None or ci_high is None:
+        return "", ""
+    
+    if ci_low > null_value or ci_high < null_value:
+        return "✓", "***"
+    else:
+        return "", ""
+
+
+def generate_summary_report(fdf, ft2, ft3, ft4):
+    """Generate a summary report as markdown text."""
+    report = []
+    report.append("# PAHS LLM Hallucination Study - Summary Report")
+    report.append(f"\n**Generated:** {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    report.append(f"\n**Total Trials:** {len(fdf):,}")
+    report.append(f"**Models:** {fdf['model_full'].nunique()}")
+    report.append(f"**Conditions:** {fdf['condition'].nunique()}")
+    report.append(f"**Cases:** {fdf['case_id'].nunique()}")
+    
+    report.append("\n## Key Findings")
+    
+    # Overall rates
+    report.append(f"\n### Overall Performance")
+    report.append(f"- **Detection Success Rate:** {fdf['detection_rate_success'].mean()*100:.1f}%")
+    report.append(f"- **Adoption Failure Rate:** {fdf['adoption_rate_failure'].mean()*100:.1f}%")
+    report.append(f"- **Hallucination Detected:** {fdf['hallucination_detected'].mean()*100:.1f}%")
+    report.append(f"- **Dangerous Reasoning:** {fdf['dangerous_reasoning_hallucination'].mean()*100:.2f}%")
+    
+    # Category distribution
+    cat_rates = category_rates(fdf)
+    report.append(f"\n### Outcome Categories")
+    report.append(f"- **Successful Defense:** {cat_rates['Successful Defense']*100:.1f}%")
+    report.append(f"- **Silent Adoption:** {cat_rates['Silent Adoption']*100:.1f}%")
+    report.append(f"- **Blind Spot:** {cat_rates['Blind Spot']*100:.1f}%")
+    report.append(f"- **False Positive:** {cat_rates['False Positive']*100:.1f}%")
+    
+    # Top performing model
+    model_perf = fdf.groupby("model_full")["detection_rate_success"].mean().sort_values(ascending=False)
+    top_model = model_perf.index[0]
+    report.append(f"\n### Best Performing Model")
+    report.append(f"- **{model_label(top_model)}:** {model_perf.iloc[0]*100:.1f}% detection success")
+    
+    report.append("\n---")
+    report.append("\n*This report was generated automatically from the PAHS LLM Hallucination Study Dashboard.*")
+    
+    return "\n".join(report)
+
+
 @st.cache_data
 def load():
-    df = pd.read_csv(TRIAL_CSV)
-    t2 = pd.read_csv(TABLE2_CSV)
-    t3 = pd.read_csv(TABLE3_CSV)
-    t4 = pd.read_csv(TABLE4_CSV)
-    t1 = pd.read_csv(TABLE1_CSV)
+    with st.spinner("Loading data..."):
+        df = pd.read_csv(TRIAL_CSV)
+        t2 = pd.read_csv(TABLE2_CSV)
+        t3 = pd.read_csv(TABLE3_CSV)
+        t4 = pd.read_csv(TABLE4_CSV)
+        t1 = pd.read_csv(TABLE1_CSV)
 
-    for table in (t2, t3, t4, t1):
-        table["model_full"] = table["provider"] + "/" + table["model_name"]
+        for table in (t2, t3, t4, t1):
+            table["model_full"] = table["provider"] + "/" + table["model_name"]
 
-    if os.path.exists(VIGNETTES_JSON):
-        with open(VIGNETTES_JSON) as f:
-            vignettes = json.load(f)
-        meta = pd.DataFrame(
-            [
-                {
-                    "case_id": row["case_id"],
-                    "token_text": row["token_text"],
-                    "token_category": row.get("category", "unknown"),
-                }
-                for row in vignettes
-            ]
-        )
-        df = df.merge(meta, on="case_id", how="left")
-    else:
-        df["token_text"] = None
-        df["token_category"] = "unknown"
+        if os.path.exists(VIGNETTES_JSON):
+            with open(VIGNETTES_JSON) as f:
+                vignettes = json.load(f)
+            meta = pd.DataFrame(
+                [
+                    {
+                        "case_id": row["case_id"],
+                        "token_text": row["token_text"],
+                        "token_category": row.get("category", "unknown"),
+                    }
+                    for row in vignettes
+                ]
+            )
+            df = df.merge(meta, on="case_id", how="left")
+        else:
+            df["token_text"] = None
+            df["token_category"] = "unknown"
 
-    dashboard = None
-    if os.path.exists(DASHBOARD_JSON):
-        with open(DASHBOARD_JSON) as f:
-            dashboard = json.load(f)
+        dashboard = None
+        if os.path.exists(DASHBOARD_JSON):
+            with open(DASHBOARD_JSON) as f:
+                dashboard = json.load(f)
 
-    run_summary = None
-    if os.path.exists(RUN_SUMMARY):
-        with open(RUN_SUMMARY) as f:
-            run_summary = json.load(f)
+        run_summary = None
+        if os.path.exists(RUN_SUMMARY):
+            with open(RUN_SUMMARY) as f:
+                run_summary = json.load(f)
 
     return df, t2, t3, t4, t1, dashboard, run_summary
 
@@ -186,14 +301,24 @@ all_conditions = sorted(df["condition"].unique())
 all_lengths = sorted(df["vignette_length"].unique())
 all_token_categories = sorted(df["token_category"].dropna().unique())
 
-sel_models = st.sidebar.multiselect("Models", all_models, default=all_models)
-sel_conditions = st.sidebar.multiselect("Conditions", all_conditions, default=all_conditions)
-sel_lengths = st.sidebar.multiselect("Vignette length", all_lengths, default=all_lengths)
+# Initialize session state for drill-down
+if "selected_model_from_chart" not in st.session_state:
+    st.session_state.selected_model_from_chart = None
+
+sel_models = st.sidebar.multiselect("Models", all_models, default=all_models, key="model_select")
+sel_conditions = st.sidebar.multiselect("Conditions", all_conditions, default=all_conditions, key="condition_select")
+sel_lengths = st.sidebar.multiselect("Vignette length", all_lengths, default=all_lengths, key="length_select")
 sel_token_categories = st.sidebar.multiselect(
     "Fabricated token category",
     all_token_categories,
     default=all_token_categories,
+    key="token_select"
 )
+
+# Reset filters button
+if st.sidebar.button("🔄 Reset Filters"):
+    st.session_state.selected_model_from_chart = None
+    st.rerun()
 
 fdf = df[
     df["model_full"].isin(sel_models)
@@ -232,6 +357,16 @@ st.caption(
     f"{len(all_conditions)} conditions · {len(df):,} pooled trials"
 )
 
+# Generate and offer summary report download
+summary_report = generate_summary_report(fdf, ft2, ft3, ft4)
+st.download_button(
+    "📄 Download Summary Report",
+    summary_report,
+    "PAHS_Summary_Report.md",
+    "text/markdown",
+    key="summary_report_download"
+)
+
 with st.expander("What the outcome categories mean"):
     st.markdown(
         """
@@ -267,7 +402,7 @@ with m5:
 st.divider()
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
     "Overview",
     "Leaderboard",
     "Condition Effects",
@@ -275,6 +410,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "Token Analysis",
     "Case Explorer",
     "Publication Tables",
+    "Help & Guide",
 ])
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -329,7 +465,18 @@ with tab1:
             margin=dict(l=0, r=30, t=10, b=10),
             height=max(240, 70 * len(agg)),
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width='stretch')
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            with st.expander("Download chart"):
+                add_chart_download(fig, "hallucination_rate_by_model")
+        with col2:
+            with st.expander("Quick filter to model"):
+                for model in agg["model_full"].tolist():
+                    if st.button(f"Filter to {model_label(model)}", key=f"filter_{model}"):
+                        st.session_state.selected_model_from_chart = model
+                        st.rerun()
 
     with right:
         st.subheader("Outcome category distribution")
@@ -346,7 +493,10 @@ with tab1:
         )
         fig2.update_traces(textinfo="percent+label")
         fig2.update_layout(showlegend=False, margin=dict(l=0, r=0, t=10, b=10), height=280)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig2, width='stretch')
+        
+        with st.expander("Download chart"):
+            add_chart_download(fig2, "outcome_category_distribution")
 
     st.subheader("Outcome categories by model (stacked %)")
     cat_model = fdf.groupby(["model_full", "category"]).size().reset_index(name="count")
@@ -370,7 +520,7 @@ with tab1:
         margin=dict(l=0, r=0, t=10, b=10),
         height=340,
     )
-    st.plotly_chart(fig3, use_container_width=True)
+    st.plotly_chart(fig3, width='stretch')
 
     radar_col, compare_col = st.columns(2)
 
@@ -410,7 +560,7 @@ with tab1:
                 height=360,
                 legend=dict(orientation="h", y=-0.15),
             )
-            st.plotly_chart(fig_radar, use_container_width=True)
+            st.plotly_chart(fig_radar, width='stretch')
 
     with compare_col:
         st.subheader("Detected vs endorsed hallucination")
@@ -445,7 +595,79 @@ with tab1:
         )
         fig4.update_traces(textposition="outside")
         fig4.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=360)
-        st.plotly_chart(fig4, use_container_width=True)
+        st.plotly_chart(fig4, width='stretch')
+
+    st.divider()
+    st.subheader("Metric correlation matrix")
+    st.caption("Correlation between key performance metrics across all trials")
+    
+    # Calculate correlation matrix
+    metrics_cols = [
+        "hallucination_detected",
+        "endorsed_hallucination",
+        "adoption_rate_failure",
+        "detection_rate_success",
+        "dangerous_reasoning_hallucination",
+    ]
+    corr_df = fdf[metrics_cols].corr()
+    
+    # Create heatmap
+    fig_corr = go.Figure(
+        go.Heatmap(
+            z=corr_df.values,
+            x=[col.replace("_", " ").title() for col in corr_df.columns],
+            y=[col.replace("_", " ").title() for col in corr_df.index],
+            colorscale="RdBu_r",
+            zmin=-1,
+            zmax=1,
+            text=[[f"{v:.2f}" for v in row] for row in corr_df.values],
+            texttemplate="%{text}",
+            textfont={"size": 10},
+            colorbar=dict(title="Correlation"),
+        )
+    )
+    fig_corr.update_layout(
+        margin=dict(l=100, r=30, t=30, b=30),
+        height=400,
+    )
+    st.plotly_chart(fig_corr, width='stretch')
+    
+    with st.expander("Download correlation matrix"):
+        add_chart_download(fig_corr, "metric_correlation_matrix")
+
+    st.divider()
+    st.subheader("Distribution analysis by model")
+    st.caption("Violin plots showing distribution of hallucination detection rates across models")
+    
+    # Create violin plot for detection rates
+    box_df = fdf.copy()
+    box_df["model_label"] = box_df["model_full"].map(model_label)
+    
+    fig_box = go.Figure()
+    for model in box_df["model_label"].unique():
+        model_data = box_df[box_df["model_label"] == model]["detection_rate_success"]
+        fig_box.add_trace(
+            go.Violin(
+                y=model_data,
+                name=model,
+                marker_color=MODEL_COLORS.get(
+                    box_df[box_df["model_label"] == model]["model_full"].iloc[0], "#888"
+                ),
+                box_visible=True,
+                meanline_visible=True,
+            )
+        )
+    fig_box.update_layout(
+        yaxis=dict(title="Detection success rate", range=[0, 1]),
+        xaxis=dict(title=""),
+        margin=dict(l=0, r=30, t=10, b=10),
+        height=400,
+        showlegend=False,
+    )
+    st.plotly_chart(fig_box, width='stretch')
+    
+    with st.expander("Download violin plot"):
+        add_chart_download(fig_box, "detection_rate_distribution")
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 2 — LEADERBOARD
@@ -488,7 +710,8 @@ with tab2:
         ]
         if c in leaderboard_display.columns
     ]
-    st.dataframe(
+    
+    paginated_df, current_page, total_pages = paginate_dataframe(
         leaderboard_display[show_cols].rename(
             columns={
                 "rank": "Rank",
@@ -503,9 +726,26 @@ with tab2:
                 "dangerous_reasoning_hallucination_rate": "Dangerous",
             }
         ),
-        use_container_width=True,
-        hide_index=True,
+        page_size=15
     )
+    st.dataframe(
+        paginated_df,
+        width='stretch',
+        hide_index=True,
+        column_config={
+            "Rank": st.column_config.NumberColumn("Rank", format="%d"),
+            "Model": st.column_config.TextColumn("Model"),
+            "Condition": st.column_config.TextColumn("Condition"),
+            "n": st.column_config.NumberColumn("n", format="%d"),
+            "Defense": st.column_config.TextColumn("Defense"),
+            "Adopted": st.column_config.TextColumn("Adopted"),
+            "False pos.": st.column_config.TextColumn("False pos."),
+            "Blind spot": st.column_config.TextColumn("Blind spot"),
+            "Dangerous": st.column_config.TextColumn("Dangerous"),
+        }
+    )
+    if total_pages > 1:
+        st.caption(f"Showing page {current_page} of {total_pages} ({len(leaderboard_display)} total rows)")
 
     st.subheader("Defense vs adoption by model × condition")
     scatter_df = leaderboard.copy()
@@ -540,7 +780,10 @@ with tab2:
         height=420,
         legend=dict(title="Model"),
     )
-    st.plotly_chart(fig_lb, use_container_width=True)
+    st.plotly_chart(fig_lb, width='stretch')
+    
+    with st.expander("Download chart"):
+        add_chart_download(fig_lb, "defense_vs_adoption_scatter")
 
     if dashboard_json and set(sel_models) == set(all_models):
         st.subheader("Model summary")
@@ -569,8 +812,16 @@ with tab2:
                     "blind_spot_rate": "Blind spot",
                 }
             ),
-            use_container_width=True,
+            width='stretch',
             hide_index=True,
+            column_config={
+                "Model": st.column_config.TextColumn("Model"),
+                "n": st.column_config.NumberColumn("n", format="%d"),
+                "Defense": st.column_config.TextColumn("Defense"),
+                "Adopted": st.column_config.TextColumn("Adopted"),
+                "False pos.": st.column_config.TextColumn("False pos."),
+                "Blind spot": st.column_config.TextColumn("Blind spot"),
+            }
         )
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -606,7 +857,7 @@ with tab3:
         margin=dict(l=0, r=0, t=10, b=10),
         height=400,
     )
-    st.plotly_chart(fig5, use_container_width=True)
+    st.plotly_chart(fig5, width='stretch')
 
     st.subheader("Outcome mix by condition")
     cond_cat = (
@@ -627,7 +878,7 @@ with tab3:
     )
     fig_cond.update_traces(textposition="inside")
     fig_cond.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=320)
-    st.plotly_chart(fig_cond, use_container_width=True)
+    st.plotly_chart(fig_cond, width='stretch')
 
     st.subheader("Condition effect — percentage difference vs DEFAULT")
     st.caption("Positive = higher hallucination rate than DEFAULT; negative = lower")
@@ -644,6 +895,10 @@ with tab3:
     rr_display["Direction"] = rr_display["risk_difference_pct"].apply(
         lambda v: "↑ Worse" if v > 0 else "↓ Better" if v < 0 else "— Same"
     )
+    rr_display["Sig."] = rr_display.apply(
+        lambda r: calculate_significance_indicator(r.get('rr_ci_low'), r.get('rr_ci_high'))[1],
+        axis=1
+    )
     st.dataframe(
         rr_display[
             [
@@ -653,6 +908,7 @@ with tab3:
                 "comparison_rate_pct",
                 "risk_difference_pct",
                 "Direction",
+                "Sig.",
             ]
         ].rename(
             columns={
@@ -660,10 +916,20 @@ with tab3:
                 "default_rate_pct": "DEFAULT %",
                 "comparison_rate_pct": "Comparison %",
                 "risk_difference_pct": "Diff %",
+                "Sig.": "Sig.",
             }
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
+        column_config={
+            "Model": st.column_config.TextColumn("Model"),
+            "Comparison": st.column_config.TextColumn("Comparison"),
+            "DEFAULT %": st.column_config.TextColumn("DEFAULT %"),
+            "Comparison %": st.column_config.TextColumn("Comparison %"),
+            "Diff %": st.column_config.TextColumn("Diff %"),
+            "Direction": st.column_config.TextColumn("Direction"),
+            "Sig.": st.column_config.TextColumn("Sig."),
+        }
     )
 
     st.subheader("Adoption failure rate by model × condition")
@@ -681,7 +947,7 @@ with tab3:
     )
     fig6.update_traces(textposition="outside")
     fig6.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=340)
-    st.plotly_chart(fig6, use_container_width=True)
+    st.plotly_chart(fig6, width='stretch')
 
     st.subheader("Hallucination rate heatmap — model × condition")
     pivot = (
@@ -705,7 +971,7 @@ with tab3:
         )
     )
     fig7.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=max(260, 60 * len(pivot)))
-    st.plotly_chart(fig7, use_container_width=True)
+    st.plotly_chart(fig7, width='stretch')
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 4 — LENGTH EFFECTS
@@ -739,12 +1005,16 @@ with tab4:
         height=420,
         legend=dict(font=dict(size=10)),
     )
-    st.plotly_chart(fig8, use_container_width=True)
+    st.plotly_chart(fig8, width='stretch')
 
     st.subheader("Percentage difference: short − long")
     st.caption("Positive = more hallucinations in short vignettes; negative = more in long")
     ft4_plot = ft4.copy()
     ft4_plot["model_label"] = ft4_plot["model_full"].map(model_label)
+    ft4_plot["Sig."] = ft4_plot.apply(
+        lambda r: calculate_significance_indicator(r.get('rr_ci_low'), r.get('rr_ci_high'))[1],
+        axis=1
+    )
     fig9 = px.bar(
         ft4_plot,
         x="model_label",
@@ -758,7 +1028,7 @@ with tab4:
     fig9.add_hline(y=0, line_dash="dash", line_color="black", line_width=1)
     fig9.update_traces(textposition="outside")
     fig9.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=360)
-    st.plotly_chart(fig9, use_container_width=True)
+    st.plotly_chart(fig9, width='stretch')
 
     st.subheader("Silent adoption by vignette length")
     len_cat = (
@@ -779,7 +1049,7 @@ with tab4:
     )
     fig_len.update_traces(textposition="inside")
     fig_len.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=300)
-    st.plotly_chart(fig_len, use_container_width=True)
+    st.plotly_chart(fig_len, width='stretch')
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TAB 5 — TOKEN ANALYSIS
@@ -806,7 +1076,7 @@ with tab5:
         labels={"token_category_label": "Token category", "pct": "%", "category": "Outcome"},
     )
     fig_token.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=360)
-    st.plotly_chart(fig_token, use_container_width=True)
+    st.plotly_chart(fig_token, width='stretch')
 
     left, right = st.columns(2)
 
@@ -828,7 +1098,7 @@ with tab5:
         )
         fig_adopt.update_traces(marker_color="#f39c12", textposition="outside")
         fig_adopt.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=320)
-        st.plotly_chart(fig_adopt, use_container_width=True)
+        st.plotly_chart(fig_adopt, width='stretch')
 
     with right:
         st.subheader("Detection success by token category")
@@ -848,7 +1118,7 @@ with tab5:
         )
         fig_detect.update_traces(marker_color="#2ecc71", textposition="outside")
         fig_detect.update_layout(margin=dict(l=0, r=0, t=10, b=10), height=320)
-        st.plotly_chart(fig_detect, use_container_width=True)
+        st.plotly_chart(fig_detect, width='stretch')
 
     st.subheader("Hardest fabricated tokens")
     st.caption("Highest silent adoption rate across filtered trials (minimum 4 trials)")
@@ -876,8 +1146,15 @@ with tab5:
                 "defense_rate": "Defense rate",
             }
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
+        column_config={
+            "Fabricated token": st.column_config.TextColumn("Fabricated token"),
+            "Category": st.column_config.TextColumn("Category"),
+            "Trials": st.column_config.NumberColumn("Trials", format="%d"),
+            "Adoption failure": st.column_config.TextColumn("Adoption failure"),
+            "Defense rate": st.column_config.TextColumn("Defense rate"),
+        }
     )
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -894,6 +1171,8 @@ with tab6:
         options=all_lengths,
         index=all_lengths.index("short") if "short" in all_lengths else 0,
     )
+    
+    search_query = st.text_input("🔍 Search cases (by case ID or token text)", placeholder="e.g., CASE_001 or amoxicillin")
 
     st.subheader("Per-case outcome heatmap")
     st.caption(
@@ -905,6 +1184,14 @@ with tab6:
         (fdf["condition"] == explorer_condition)
         & (fdf["vignette_length"] == explorer_length)
     ][["case_id", "model_full", "category", "token_text"]].copy()
+    
+    # Apply search filter if provided
+    if search_query:
+        search_query = search_query.lower()
+        heat_df = heat_df[
+            heat_df["case_id"].str.lower().str.contains(search_query, na=False) |
+            heat_df["token_text"].str.lower().str.contains(search_query, na=False)
+        ]
 
     if heat_df.empty:
         st.info("No trials match the current filters.")
@@ -942,7 +1229,7 @@ with tab6:
             margin=dict(l=0, r=0, t=10, b=10),
             yaxis=dict(showticklabels=False, title="Cases"),
         )
-        st.plotly_chart(fig10, use_container_width=True)
+        st.plotly_chart(fig10, width='stretch')
 
         n_models_selected = heat_df["model_full"].nunique()
         fail_label = f"Cases where all {n_models_selected} models failed (Silent Adoption)"
@@ -998,34 +1285,41 @@ with tab6:
                         "detection_rate_success": "Detected",
                     }
                 ),
-                use_container_width=True,
+                width='stretch',
                 hide_index=True,
             )
 
     with st.expander("Raw trial data"):
         export_df = fdf.copy()
         export_df["model_label"] = export_df["model_full"].map(model_label)
+        trial_cols = [
+            "model_label",
+            "condition",
+            "vignette_length",
+            "case_id",
+            "token_text",
+            "token_category",
+            "hallucination_detected",
+            "endorsed_hallucination",
+            "adoption_rate_failure",
+            "detection_rate_success",
+            "dangerous_reasoning_hallucination",
+            "category",
+        ]
+        
+        paginated_trials, current_page, total_pages = paginate_dataframe(
+            export_df[trial_cols],
+            page_size=50
+        )
         st.dataframe(
-            export_df[
-                [
-                    "model_label",
-                    "condition",
-                    "vignette_length",
-                    "case_id",
-                    "token_text",
-                    "token_category",
-                    "hallucination_detected",
-                    "endorsed_hallucination",
-                    "adoption_rate_failure",
-                    "detection_rate_success",
-                    "dangerous_reasoning_hallucination",
-                    "category",
-                ]
-            ],
-            use_container_width=True,
+            paginated_trials,
+            width='stretch',
             height=380,
         )
-        st.caption(f"{len(fdf):,} rows")
+        if total_pages > 1:
+            st.caption(f"Showing page {current_page} of {total_pages} ({len(export_df):,} total rows)")
+        else:
+            st.caption(f"{len(export_df):,} rows")
         st.download_button(
             "Download filtered trials",
             export_df.to_csv(index=False),
@@ -1044,8 +1338,17 @@ with tab7:
         t1_display.drop(columns=["provider", "model_name", "model_full"]).rename(
             columns={"model_label": "model"}
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
+        column_config={
+            "model": st.column_config.TextColumn("model"),
+            "total_trials": st.column_config.NumberColumn("total_trials", format="%d"),
+            "hallucination_rate_pct": st.column_config.TextColumn("hallucination_rate_pct"),
+            "endorsed_hallucination_rate_pct": st.column_config.TextColumn("endorsed_hallucination_rate_pct"),
+            "adoption_failure_rate_pct": st.column_config.TextColumn("adoption_failure_rate_pct"),
+            "detection_success_rate_pct": st.column_config.TextColumn("detection_success_rate_pct"),
+            "dangerous_reasoning_rate_pct": st.column_config.TextColumn("dangerous_reasoning_rate_pct"),
+        }
     )
     st.download_button("Download Table 1", ft1.to_csv(index=False), "table1_coverage.csv", "text/csv")
 
@@ -1081,7 +1384,7 @@ with tab7:
                 "dangerous_reasoning_rate_pct": "Dangerous %",
             }
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
     )
     st.download_button("Download Table 2", ft2.to_csv(index=False), "table2_outcomes.csv", "text/csv")
@@ -1104,7 +1407,7 @@ with tab7:
                 "risk_difference_pct": "Diff %",
             }
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
     )
     st.download_button("Download Table 3", ft3.to_csv(index=False), "table3_condition_effects.csv", "text/csv")
@@ -1138,7 +1441,556 @@ with tab7:
                 "risk_difference_pct": "Diff %",
             }
         ),
-        use_container_width=True,
+        width='stretch',
         hide_index=True,
     )
     st.download_button("Download Table 4", ft4.to_csv(index=False), "table4_length_effects.csv", "text/csv")
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# TAB 8 — HELP & GUIDE
+# ═══════════════════════════════════════════════════════════════════════════════
+with tab8:
+    st.header("How to Study Each Model")
+    
+    st.markdown("""
+    This guide will help you systematically analyze and compare the performance of different LLMs in detecting hallucinations.
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 1: Understand the Outcome Categories")
+    st.markdown("""
+    | Category | What happened | Clinical risk | Interpretation |
+    | --- | --- | --- | --- |
+    | **Successful Defense** | Fake term detected and excluded | None — goal behavior | Model correctly identified the fabricated term |
+    | **Silent Adoption** | Fake term accepted as real | **High** — hallucination in reasoning | Model hallucinated, accepted fake information |
+    | **False Positive** | Real term wrongly flagged as fake | Moderate — alert fatigue | Model was overly suspicious, flagged real term |
+    | **Blind Spot** | Fake term ignored, neither adopted nor flagged | Low–moderate — noise unnoticed | Model missed the fake term entirely |
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 2: Key Metrics to Study")
+    st.markdown("""
+    **Primary Metrics:**
+    - **Detection Success Rate**: Percentage of trials where the model detected the fake term
+    - **Adoption Failure Rate**: Percentage of trials where the model adopted the fake term (Silent Adoption)
+    - **Hallucination Detected**: Whether the model flagged the presence of hallucination
+    - **Dangerous Reasoning**: Whether the hallucination led to clinically dangerous reasoning
+    
+    **Secondary Metrics:**
+    - **False Positive Rate**: How often the model incorrectly flags real terms as fake
+    - **Blind Spot Rate**: How often the model misses fake terms entirely
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 3: How to Analyze a Specific Model")
+    st.markdown("""
+    **Method 1: Using the Overview Tab**
+    1. Go to the **Overview** tab
+    2. Use the sidebar filters to select only your model of interest
+    3. Review the KPI metrics at the top
+    4. Examine the "Hallucination rate by model" chart
+    5. Check the "Outcome categories by model" stacked bar
+    6. Review the "Model safety profile" radar chart
+    
+    **Method 2: Using the Leaderboard Tab**
+    1. Go to the **Leaderboard** tab
+    2. Find your model in the leaderboard table
+    3. Compare its rank across different conditions
+    4. Review the "Defense vs adoption" scatter plot to see relative performance
+    
+    **Method 3: Using Quick Filter**
+    1. In the Overview tab, expand "Quick filter to model"
+    2. Click the button for your desired model
+    3. The dashboard will automatically filter to show only that model
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 4: Comparing Models")
+    st.markdown("""
+    **Side-by-Side Comparison:**
+    1. Use the sidebar to select 2-3 models you want to compare
+    2. Go to the **Overview** tab to see overall performance comparison
+    3. Check the **Leaderboard** tab for ranked comparison
+    4. Review **Condition Effects** to see how models respond to different prompts
+    5. Check **Length Effects** to see performance on short vs long vignettes
+    
+    **Key Comparison Points:**
+    - Which model has the highest detection success rate?
+    - Which model has the lowest silent adoption rate?
+    - How do models perform under different conditions (DEFAULT, SAFETY_INSTRUCTION, DETERMINISTIC)?
+    - Are there differences in performance between short and long vignettes?
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 5: Deep Dive Analysis")
+    st.markdown("""
+    **Condition Effects Analysis:**
+    - Go to **Condition Effects** tab
+    - Study how each model responds to safety instructions
+    - Check if deterministic prompts reduce hallucinations
+    - Look at the risk ratios to see effect sizes
+    
+    **Token Category Analysis:**
+    - Go to **Token Analysis** tab
+    - See which types of fabricated terms are hardest for each model
+    - Check if certain categories (e.g., lab markers, drugs) are more problematic
+    
+    **Case-Level Analysis:**
+    - Go to **Case Explorer** tab
+    - Search for specific cases or tokens
+    - Use the heatmap to see which cases are hardest for all models
+    - Review individual case details to understand failure modes
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 6: Statistical Interpretation")
+    st.markdown("""
+    **Confidence Intervals (CI):**
+    - 95% CI shows the range where the true value likely falls
+    - Narrow CI = more precise estimate
+    - Wide CI = less certainty, usually due to small sample size
+    
+    **Statistical Significance (Sig.):**
+    - *** = Statistically significant (CI does not include null value)
+    - Blank = Not statistically significant
+    - For risk ratios: significant if CI does not include 1.0
+    - For risk differences: significant if CI does not include 0
+    
+    **Correlation Matrix:**
+    - Shows relationships between metrics
+    - Values close to 1.0 = strong positive correlation
+    - Values close to -1.0 = strong negative correlation
+    - Values close to 0 = no correlation
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 7: Practical Tips")
+    st.markdown("""
+    **For Clinical Decision Making:**
+    - Prioritize models with high detection success and low silent adoption
+    - Consider false positive rates - too many may cause alert fatigue
+    - Look at dangerous reasoning rates - these are most clinically relevant
+    
+    **For Research:**
+    - Use the Publication Tables tab for export-ready data
+    - Download charts as PNG/SVG for papers
+    - Generate summary reports for documentation
+    
+    **For Model Selection:**
+    - Consider the trade-off between detection and false positives
+    - Evaluate performance across different conditions
+    - Check if the model performs consistently across vignette lengths
+    """)
+    
+    st.divider()
+    
+    st.subheader("Step 8: Study Workflow Example")
+    st.markdown("""
+    **Example: Studying Claude Haiku 4.5**
+    
+    1. **Start with Overview**: Filter to Claude Haiku 4.5, note overall metrics
+    2. **Check Leaderboard**: See its rank compared to other models
+    3. **Review Conditions**: How does it respond to safety instructions?
+    4. **Analyze Length**: Performance on short vs long vignettes
+    5. **Token Analysis**: Which token categories are problematic?
+    6. **Case Explorer**: Look at specific failure cases
+    7. **Export Data**: Download relevant tables for further analysis
+    8. **Generate Report**: Use the summary report for documentation
+    """)
+    
+    st.divider()
+    
+    st.subheader("Frequently Asked Questions")
+    
+    with st.expander("What is a 'good' detection rate?"):
+        st.markdown("""
+        A good detection rate depends on the use case:
+        - **For clinical safety**: Aim for >80% detection success
+        - **For research**: Compare relative performance between models
+        - **For general use**: Balance detection with false positive rate
+        """)
+    
+    with st.expander("Why do some models show no variation in box plots?"):
+        st.markdown("""
+        Some models may have consistent performance across trials, showing little variation.
+        This could indicate:
+        - Consistent behavior (good or bad)
+        - Small sample size
+        - Model limitations in handling the task
+        """)
+    
+    with st.expander("How do I interpret the risk ratio?"):
+        st.markdown("""
+        - **RR > 1.0**: Higher risk than baseline (worse)
+        - **RR < 1.0**: Lower risk than baseline (better)
+        - **RR = 1.0**: No difference from baseline
+        - Example: RR = 0.5 means 50% reduction in risk
+        """)
+    
+    with st.expander("What should I do if I see high silent adoption?"):
+        st.markdown("""
+        High silent adoption indicates the model is hallucinating frequently.
+        Consider:
+        - Adding safety instructions to prompts
+        - Using deterministic prompts
+        - Switching to a different model
+        - Implementing additional validation steps
+        """)
+    
+    st.success("You're now ready to systematically study and compare LLM performance!")
+    
+    st.divider()
+    
+    st.header("Diagram Instructions")
+    
+    st.subheader("Overview Tab Diagrams")
+    
+    with st.expander("Hallucination Rate by Model (95% CI)"):
+        st.markdown("""
+        **What it shows:** Bar chart showing hallucination rate for each model with 95% confidence intervals
+        
+        **How to read it:**
+        - Bar height = hallucination rate percentage
+        - Error bars = 95% confidence interval (range of uncertainty)
+        - Lower bars = better performance (less hallucination)
+        
+        **What to look for:**
+        - Which model has the lowest hallucination rate?
+        - Are confidence intervals narrow (precise) or wide (uncertain)?
+        - Do confidence intervals overlap between models?
+        """)
+    
+    with st.expander("Outcome Category Distribution"):
+        st.markdown("""
+        **What it shows:** Pie chart showing the proportion of each outcome category
+        
+        **How to read it:**
+        - Slice size = percentage of trials in that category
+        - Green (Successful Defense) = good
+        - Orange (Silent Adoption) = bad (hallucination)
+        - Red (Blind Spot) = moderate concern
+        - Purple (False Positive) = moderate concern
+        
+        **What to look for:**
+        - High green = model detects fake terms well
+        - High orange = model hallucinates frequently
+        - Balance between categories
+        """)
+    
+    with st.expander("Outcome Categories by Model (Stacked %)"):
+        st.markdown("""
+        **What it shows:** Stacked bar chart showing outcome distribution for each model
+        
+        **How to read it:**
+        - Each bar = one model
+        - Bar segments = outcome categories
+        - Segment height = percentage of trials in that category
+        - Total bar height = 100%
+        
+        **What to look for:**
+        - Compare green segments (Successful Defense) across models
+        - Compare orange segments (Silent Adoption) across models
+        - Which model has the best distribution?
+        """)
+    
+    with st.expander("Model Safety Profile (Radar Chart)"):
+        st.markdown("""
+        **What it shows:** Radar chart comparing models across 4 safety metrics
+        
+        **How to read it:**
+        - Each axis = one metric (Defense, Low adoption, Detection, Low blind spot)
+        - Points closer to edge = better performance
+        - Larger shape = overall better performance
+        - Shape symmetry = balanced performance
+        
+        **What to look for:**
+        - Which model has the largest area?
+        - Are models strong in some areas but weak in others?
+        - Which model has the most balanced profile?
+        """)
+    
+    with st.expander("Detected vs Endorsed Hallucination"):
+        st.markdown("""
+        **What it shows:** Grouped bar chart comparing detection vs endorsement rates
+        
+        **How to read it:**
+        - Red bars (Detected) = hallucination was flagged
+        - Dark red bars (Endorsed) = model agreed with fake term
+        - Lower bars = better (less hallucination)
+        
+        **What to look for:**
+        - Which model detects most hallucinations?
+        - Which model endorses fewest hallucinations?
+        - Gap between detected and endorsed
+        """)
+    
+    with st.expander("Metric Correlation Matrix"):
+        st.markdown("""
+        **What it shows:** Heatmap showing correlations between metrics
+        
+        **How to read it:**
+        - Color intensity = correlation strength
+        - Red = positive correlation (metrics move together)
+        - Blue = negative correlation (metrics move opposite)
+        - Values range from -1 to +1
+        
+        **What to look for:**
+        - Strong correlations (|value| > 0.7)
+        - Unexpected relationships between metrics
+        - Which metrics are independent of each other
+        """)
+    
+    with st.expander("Distribution Analysis (Violin Plot)"):
+        st.markdown("""
+        **What it shows:** Violin plots showing distribution of detection rates
+        
+        **How to read it:**
+        - Shape width = frequency of values at that rate
+        - Box inside = quartiles (25%, 50%, 75%)
+        - White dot = median
+        - Height = range of values
+        
+        **What to look for:**
+        - Which model has highest median detection rate?
+        - Which model has most consistent performance (narrow shape)?
+        - Which model has most variable performance (wide shape)?
+        - Outliers (individual points beyond box)
+        """)
+    
+    st.divider()
+    
+    st.subheader("Leaderboard Tab Diagrams")
+    
+    with st.expander("Model × Condition Leaderboard"):
+        st.markdown("""
+        **What it shows:** Ranked table of model performance by condition
+        
+        **How to read it:**
+        - Rank = overall performance ranking
+        - Defense = Successful Defense rate (higher is better)
+        - Adopted = Silent Adoption rate (lower is better)
+        - Dangerous = Dangerous reasoning rate (lower is better)
+        
+        **What to look for:**
+        - Which model-condition combination ranks highest?
+        - How does a model perform across different conditions?
+        - Which condition yields best performance for each model?
+        """)
+    
+    with st.expander("Defense vs Adoption Scatter Plot"):
+        st.markdown("""
+        **What it shows:** Scatter plot comparing defense vs adoption rates
+        
+        **How to read it:**
+        - X-axis = Silent Adoption rate (lower is better)
+        - Y-axis = Successful Defense rate (higher is better)
+        - Bubble size = number of trials
+        - Color = model
+        - Shape = condition
+        
+        **What to look for:**
+        - Top-left quadrant = best (high defense, low adoption)
+        - Bottom-right quadrant = worst (low defense, high adoption)
+        - Which model-condition pairs are in top-left?
+        """)
+    
+    st.divider()
+    
+    st.subheader("Condition Effects Tab Diagrams")
+    
+    with st.expander("Hallucination Rate by Model × Condition (95% CI)"):
+        st.markdown("""
+        **What it shows:** Grouped bar chart with confidence intervals by condition
+        
+        **How to read it:**
+        - Groups = models
+        - Bars within group = conditions (DEFAULT, DETERMINISTIC, SAFETY_INSTRUCTION)
+        - Error bars = 95% confidence intervals
+        - Color = condition
+        
+        **What to look for:**
+        - Which condition reduces hallucinations most?
+        - Do safety instructions help?
+        - Does deterministic prompting help?
+        - Are effects consistent across models?
+        """)
+    
+    with st.expander("Outcome Mix by Condition"):
+        st.markdown("""
+        **What it shows:** Stacked bar chart of outcomes by condition
+        
+        **How to read it:**
+        - Each bar = one condition
+        - Segments = outcome categories
+        - Height = percentage
+        
+        **What to look for:**
+        - Which condition has highest Successful Defense?
+        - Which condition has lowest Silent Adoption?
+        - How do conditions affect outcome distribution?
+        """)
+    
+    with st.expander("Hallucination Rate Heatmap (Model × Condition)"):
+        st.markdown("""
+        **What it shows:** Heatmap of hallucination rates by model and condition
+        
+        **How to read it:**
+        - Cells = model-condition combinations
+        - Color = hallucination rate (green = low, red = high)
+        - Darker color = higher rate
+        
+        **What to look for:**
+        - Which cells are green (good performance)?
+        - Which cells are red (poor performance)?
+        - Patterns across conditions
+        - Patterns across models
+        """)
+    
+    st.divider()
+    
+    st.subheader("Length Effects Tab Diagrams")
+    
+    with st.expander("Short vs Long Vignette (95% CI)"):
+        st.markdown("""
+        **What it shows:** Line chart comparing hallucination rates by vignette length
+        
+        **How to read it:**
+        - Lines = model-condition combinations
+        - X-axis = vignette length (Short, Long)
+        - Y-axis = hallucination rate
+        - Error bars = 95% confidence intervals
+        - Line style = condition
+        
+        **What to look for:**
+        - Does hallucination rate change with length?
+        - Which length is better for each model?
+        - Are effects consistent across conditions?
+        - Do confidence intervals overlap?
+        """)
+    
+    with st.expander("Risk Difference: Short − Long"):
+        st.markdown("""
+        **What it shows:** Bar chart of risk difference between short and long vignettes
+        
+        **How to read it:**
+        - Bars = model-condition combinations
+        - Height = risk difference (short rate - long rate)
+        - Positive = more hallucinations in short
+        - Negative = more hallucinations in long
+        - Zero line = no difference
+        
+        **What to look for:**
+        - Which direction is the effect?
+        - Is the effect statistically significant (Sig. column)?
+        - Magnitude of effect
+        - Consistency across models
+        """)
+    
+    with st.expander("Silent Adoption by Vignette Length"):
+        st.markdown("""
+        **What it shows:** Stacked bar chart of outcomes by vignette length
+        
+        **How to read it:**
+        - Bars = vignette lengths (short, long)
+        - Segments = outcome categories
+        - Height = percentage
+        
+        **What to look for:**
+        - Does length affect Silent Adoption rate?
+        - Which length has better outcome distribution?
+        - Are patterns consistent across models?
+        """)
+    
+    st.divider()
+    
+    st.subheader("Token Analysis Tab Diagrams")
+    
+    with st.expander("Outcomes by Fabricated Token Category"):
+        st.markdown("""
+        **What it shows:** Stacked bar chart of outcomes by token category
+        
+        **How to read it:**
+        - Bars = token categories (Pathway of care, Lab markers, Drugs, Assessment)
+        - Segments = outcome categories
+        - Height = percentage
+        
+        **What to look for:**
+        - Which token categories are hardest?
+        - Which categories have highest Silent Adoption?
+        - Are certain categories consistently problematic?
+        - Model-specific weaknesses
+        """)
+    
+    with st.expander("Silent Adoption Rate by Token Category"):
+        st.markdown("""
+        **What it shows:** Bar chart of adoption failure by token category
+        
+        **How to read it:**
+        - Bars = token categories
+        - Height = adoption failure rate
+        - Higher = worse (more hallucination)
+        
+        **What to look for:**
+        - Which categories have highest adoption rates?
+        - Which categories are safest?
+        - Relative difficulty of categories
+        """)
+    
+    with st.expander("Detection Success by Token Category"):
+        st.markdown("""
+        **What it shows:** Bar chart of detection success by token category
+        
+        **How to read it:**
+        - Bars = token categories
+        - Height = detection success rate
+        - Higher = better (more detection)
+        
+        **What to look for:**
+        - Which categories have highest detection?
+        - Which categories are hardest to detect?
+        - Model strengths by category
+        """)
+    
+    st.divider()
+    
+    st.subheader("Case Explorer Tab Diagrams")
+    
+    with st.expander("Per-Case Outcome Heatmap"):
+        st.markdown("""
+        **What it shows:** Heatmap showing outcomes for each case across models
+        
+        **How to read it:**
+        - Rows = individual cases
+        - Columns = models
+        - Cell color = outcome category
+        - Green = Successful Defense, Red = Silent Adoption
+        
+        **What to look for:**
+        - Which cases are hardest (mostly red)?
+        - Which cases are easiest (mostly green)?
+        - Are there cases where all models fail?
+        - Are there cases where all models succeed?
+        - Model-specific difficult cases
+        """)
+    
+    with st.expander("Cases Where All Models Failed/Succeeded"):
+        st.markdown("""
+        **What it shows:** Lists of cases with universal outcomes
+        
+        **How to read it:**
+        - Failed cases = all models showed Silent Adoption
+        - Succeeded cases = all models showed Successful Defense
+        
+        **What to look for:**
+        - What makes failed cases so difficult?
+        - What makes succeeded cases so easy?
+        - Patterns in case characteristics
+        - Implications for model improvement
+        """)
