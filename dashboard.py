@@ -743,9 +743,6 @@ with tab2:
         legend=dict(title="Model"),
     )
     st.plotly_chart(fig_lb, width='stretch')
-    
-    with st.expander("Download chart"):
-        add_chart_download(fig_lb, "defense_vs_adoption_scatter")
 
     if dashboard_json and set(sel_models) == set(all_models):
         st.subheader("Model summary")
