@@ -32,7 +32,7 @@ client = instructor.from_litellm(completion)
 #   python pilot.py --model openai/gpt-5.5
 #   python pilot.py --provider opensource --model ollama/llama2
 #   python pilot.py --independent-model-runs
-#   python pilot.py --vignettes-count 293  # Full study
+#   python pilot.py --vignettes-count 300  # Full study
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Run the 2026 pilot against one or more LLM providers."

@@ -10,7 +10,7 @@
 ## Phase 1: Study Setup & Design ✅
 - [x] Literature review and proposal development
 - [x] Ethical approval/IRC waiver (assumed completed; no recent approval doc found)
-- [x] Vignette dataset preparation (293 cases with short/long pairs)
+- [x] Vignette dataset preparation (300 cases with short/long pairs)
 - [x] Fabricated detail insertion (token_text per case)
 - [x] LLM API setup (OpenAI, Anthropic, Google)
 - [x] Python environment and CLI setup (`pilot.py`)
@@ -21,13 +21,13 @@
 
 ### Paid Models (3 providers) ✅ COMPLETE
 - [x] Pilot testing (2 vignettes × 3 models × 3 conditions = 18 trials) 
-- [x] Main study: OpenAI GPT-5.4-mini (293 vignettes × 3 conditions × 2 lengths = 1,758 trials)
-- [x] Main study: Anthropic Claude Haiku 4.5 (1,758 trials)
-- [x] Main study: Google Gemini 3.1 Flash Lite (1,758 trials)
+- [x] Main study: OpenAI GPT-5.4-mini (300 vignettes × 3 conditions × 2 lengths = 1,800 trials)
+- [x] Main study: Anthropic Claude Haiku 4.5 (1,800 trials)
+- [x] Main study: Google Gemini 3.1 Flash Lite (1,800 trials)
 
 ### Open-Source Model(s) ✅ COMPLETE
 - [x] Pilot testing (2 vignettes × 1 opensource model × 3 conditions = 6 trials)
-- [x] Main study: LLaMA 3.3 70B (OpenRouter) (293 vignettes × 3 conditions × 2 lengths = 1,800 trials)
+- [x] Main study: LLaMA 3.3 70B (OpenRouter) (300 vignettes × 3 conditions × 2 lengths = 1,800 trials)
   - **Provider:** OpenRouter (LLaMA 3.3 70B Instruct)
   - **Result file:** `04_results/raw_json/PAHS_STUDY_RESULTS_2026_openrouter_meta-llama_llama-3.3-70b-instruct.json`
   - **Status:** ✅ Completed May 29, 2026
@@ -68,12 +68,12 @@
 ```bash
 # Quick upgrade (Sonnet recommended)
 export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet
-python pilot.py --provider anthropic --vignettes-count 293
+python pilot.py --provider anthropic --vignettes-count 300
 
 # Full Tier 1 comparison (~$120 additional)
-export PAHS_OPENAI_MODEL=openai/gpt-5.4 && python pilot.py --provider openai --vignettes-count 293
-export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet && python pilot.py --provider anthropic --vignettes-count 293
-export PAHS_GEMINI_MODEL=google/gemini-2.0-flash && python pilot.py --provider gemini --vignettes-count 293
+export PAHS_OPENAI_MODEL=openai/gpt-5.4 && python pilot.py --provider openai --vignettes-count 300
+export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet && python pilot.py --provider anthropic --vignettes-count 300
+export PAHS_GEMINI_MODEL=google/gemini-2.0-flash && python pilot.py --provider gemini --vignettes-count 300
 
 # Re-run pooled analysis
 python 03_src/evaluation/pool_hallucination_analysis.py
@@ -308,9 +308,9 @@ python 03_src/evaluation/interrater_reliability.py \
 
 3. **→ Run open-source full study**
    ```bash
-   python pilot.py --provider opensource --vignettes-count 293
+   python pilot.py --provider opensource --vignettes-count 300
    ```
-   - Expected output: `04_results/raw_json/PAHS_STUDY_RESULTS_2026_<model>.json` (1,758 rows)
+   - Expected output: `04_results/raw_json/PAHS_STUDY_RESULTS_2026_<model>.json` (1,800 rows)
    - Estimated runtime: 2–6 hours (Groq fastest, Ollama slowest)
    - Timeline: Overnight or 1 full day
    - Owner: Hemanta

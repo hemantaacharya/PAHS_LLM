@@ -105,15 +105,15 @@ def convert_markdown_to_word():
         doc.add_paragraph(exc, style='List Bullet')
 
     doc.add_heading('Sample Size', level=2)
-    doc.add_paragraph('Total vignettes developed: 293')
+    doc.add_paragraph('Total vignettes developed: 300')
     doc.add_paragraph('Rationale: Opportunistic census of available complete records meeting criteria during specified date range.')
 
     doc.add_paragraph('Sub-samples for specific analyses:')
 
     samples = [
-        'Main study: All 293 vignettes × 3 models × 3 conditions × 2 lengths = 5,274 trials (LLM runs)',
+        'Main study: All 300 vignettes × 3 models × 3 conditions × 2 lengths = 5,400 trials (LLM runs)',
         'Pilot: 2 vignettes × 3 models × 3 conditions × 1 length = 18 trials (testing/validation)',
-        'Inter-rater subset: Pilot set (18) + 20% of main study (~55) = ~73 cases for dual psychiatrist review'
+        'Inter-rater subset: Pilot set (18) + 20% of main study (~60) = ~78 cases for dual psychiatrist review'
     ]
     for sample in samples:
         doc.add_paragraph(sample, style='List Bullet')
@@ -185,7 +185,7 @@ def convert_markdown_to_word():
         doc.add_paragraph(step, style='List Bullet')
 
     doc.add_heading('Vignette Database', level=2)
-    doc.add_paragraph('Final dataset: 293 vignettes stored in JSON format')
+    doc.add_paragraph('Final dataset: 300 vignettes stored in JSON format')
     doc.add_paragraph('File: 02_data/experimental/combined_vignettes_clean.json')
     doc.add_paragraph('Each record contains:')
     db_fields = [
@@ -529,7 +529,7 @@ recommended_management: [str, ...]'''
     reproducibility = [
         'All code in public repository (GitHub: hemantaacharya/PAHS_LLM)',
         'Environment: .venv Python virtual environment, requirements.txt for dependencies',
-        'Execution: CLI-driven via pilot.py --vignettes-count 293',
+        'Execution: CLI-driven via pilot.py --vignettes-count 300',
         'Version control: Git commit SHA recorded with each analysis run'
     ]
     for rep in reproducibility:

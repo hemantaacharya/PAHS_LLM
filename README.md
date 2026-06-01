@@ -33,7 +33,7 @@ export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet
 export PAHS_GEMINI_MODEL=google/gemini-2.0-flash
 
 # Then run
-python pilot.py --vignettes-count 293
+python pilot.py --vignettes-count 300
 ```
 
 **For detailed model comparison and upgrade guidance, see [MODEL_REFINEMENT_GUIDE.md](MODEL_REFINEMENT_GUIDE.md).**

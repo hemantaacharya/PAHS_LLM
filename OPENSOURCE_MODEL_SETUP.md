@@ -114,10 +114,10 @@ export PAHS_OPENSOURCE_MODEL=ollama/llama2
 export PAHS_OPENSOURCE_MODEL=groq/llama2-70b-4096
 
 # Run the pilot
-python pilot.py --provider opensource --vignettes-count 293
+python pilot.py --provider opensource --vignettes-count 300
 
 # Alternative: test just this model (independent run)
-python pilot.py --model ollama/llama2 --vignettes-count 293 --independent-model-runs
+python pilot.py --model ollama/llama2 --vignettes-count 300 --independent-model-runs
 ```
 
 ### Example Workflows
@@ -140,7 +140,7 @@ cat 04_results/raw_json/PILOT_2026_RESULTS_ollama_llama2.json
 export GROQ_API_KEY=gsk_your_key_here
 export PAHS_OPENSOURCE_MODEL=groq/llama2-70b-4096
 
-python pilot.py --provider opensource --vignettes-count 293
+python pilot.py --provider opensource --vignettes-count 300
 
 # Check results
 ls -lh 04_results/raw_json/PAHS_STUDY_RESULTS_2026_groq*.json
@@ -149,7 +149,7 @@ ls -lh 04_results/raw_json/PAHS_STUDY_RESULTS_2026_groq*.json
 #### 3. Multi-Model Sequential Runs
 ```bash
 # Run all 4 models independently (one per file)
-python pilot.py --independent-model-runs --vignettes-count 293
+python pilot.py --independent-model-runs --vignettes-count 300
 
 # Results saved as:
 # - PILOT_2026_RESULTS_openai_gpt-5.4-mini.json
@@ -165,13 +165,13 @@ python pilot.py --independent-model-runs --vignettes-count 293
 ### Ollama (Local)
 - **Runtime:** ~10–30 sec per vignette (GPU-dependent)
 - **Cost:** $0 (runs locally)
-- **Total (293 × 3 conditions × 2 lengths):** ~6–18 hours
+- **Total (300 × 3 conditions × 2 lengths):** ~6–18 hours
 - **Recommendation:** Run overnight or in background
 
 ### Groq
 - **Runtime:** ~1–3 sec per vignette (API latency)
 - **Cost:** Free tier: 100 calls/min (~$0.50 after); pay-as-you-go
-- **Total (293 × 3 × 2 = 1,758 trials):** <2 hours, ~$1–5
+- **Total (300 × 3 × 2 = 1,800 trials):** <2 hours, ~$1–5
 - **Recommendation:** Fast option for full study
 
 ### Replicate
@@ -246,7 +246,7 @@ ollama serve &
 3. Run 2-vignette pilot: `python pilot.py --provider opensource`
 
 ### Phase 2: Full Study (2–5 days)
-1. Run full 293-vignette study: `python pilot.py --provider opensource --vignettes-count 293`
+1. Run full 300-vignette study: `python pilot.py --provider opensource --vignettes-count 300`
 2. Monitor progress and logs
 3. Save results to `04_results/`
 

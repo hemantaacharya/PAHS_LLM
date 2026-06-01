@@ -92,19 +92,19 @@ Test one higher-end model per provider to establish "quality baseline":
 ```bash
 # 1. Anthropic Sonnet (best value upgrade)
 export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet
-python pilot.py --provider anthropic --vignettes-count 293
+python pilot.py --provider anthropic --vignettes-count 300
 
 # 2. OpenAI Standard (solid performance)
 export PAHS_OPENAI_MODEL=openai/gpt-5.4
-python pilot.py --provider openai --vignettes-count 293
+python pilot.py --provider openai --vignettes-count 300
 
 # 3. Google Flash (incremental improvement)
 export PAHS_GEMINI_MODEL=google/gemini-2.0-flash
-python pilot.py --provider gemini --vignettes-count 293
+python pilot.py --provider gemini --vignettes-count 300
 ```
 
 **Total cost estimate:**
-- Claude Sonnet: ~$70 (293 vignettes × 3 conditions × 2 lengths × $0.009/1K tokens)
+- Claude Sonnet: ~$70 (300 vignettes × 3 conditions × 2 lengths × $0.009/1K tokens)
 - GPT-5.4: ~$40
 - Gemini Flash: ~$8
 - **Total: ~$118** (vs. $30 for current low-cost variants)
@@ -123,12 +123,12 @@ Test all upgrades plus current baseline for complete comparison:
 # - gemini/gemini-3.1-flash-lite ✅
 
 # Tier 1 Upgrades (next)
-export PAHS_OPENAI_MODEL=openai/gpt-5.4 && python pilot.py --provider openai --vignettes-count 293
-export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet && python pilot.py --provider anthropic --vignettes-count 293
-export PAHS_GEMINI_MODEL=google/gemini-2.0-flash && python pilot.py --provider gemini --vignettes-count 293
+export PAHS_OPENAI_MODEL=openai/gpt-5.4 && python pilot.py --provider openai --vignettes-count 300
+export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet && python pilot.py --provider anthropic --vignettes-count 300
+export PAHS_GEMINI_MODEL=google/gemini-2.0-flash && python pilot.py --provider gemini --vignettes-count 300
 
 # Optional: Tier 2 Premium (if budget allows)
-export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-opus && python pilot.py --provider anthropic --vignettes-count 293 --output-file 04_results/raw_json/PAHS_STUDY_RESULTS_2026_anthropic_claude-opus.json
+export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-opus && python pilot.py --provider anthropic --vignettes-count 300 --output-file 04_results/raw_json/PAHS_STUDY_RESULTS_2026_anthropic_claude-opus.json
 ```
 
 ---
@@ -246,8 +246,8 @@ python pilot.py --provider anthropic
 # Inspect output
 cat 04_results/raw_json/PILOT_2026_RESULTS_anthropic_claude-3-sonnet.json
 
-# Full study (all 293 vignettes)
-python pilot.py --provider anthropic --vignettes-count 293
+# Full study (all 300 vignettes)
+python pilot.py --provider anthropic --vignettes-count 300
 ```
 
 ### Expected Runtime

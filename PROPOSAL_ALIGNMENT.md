@@ -16,7 +16,7 @@
 - **File:** `02_data/experimental/combined_vignettes_clean.json`
 - **Status:** COMPLETE
 - **Details:**
-  - 293 vignettes extracted from de-identified EMR
+- 300 vignettes extracted from de-identified EMR
   - Each has `vignette_pair.short` and `vignette_pair.long`
   - Each contains `token_text` (fabricated detail) and `category`
   - Format: JSON array with `case_id`, `token_id`, and blind IDs per length
@@ -202,9 +202,9 @@ Example from `*_hallucination_focus.json`:
 
 | Objective | Status | % Complete | Notes |
 |-----------|--------|-----------|-------|
-| 1. Vignette development | ✅(paid) | ✅ Complete | 75% | 3 paid models × 3 conditions × 293 vignettes |
+| 1. Vignette development | ✅(paid) | ✅ Complete | 75% | 3 paid models × 3 conditions × 300 vignettes |
 | 2. Multi-condition testing (OSS) | ⏳ Pending | 25% | Open-source baseline awaits completion |
-| 3. Hallucination rate calc (paid) | ✅ Complete | 75% | 5,274 paid model rows analyzed |
+| 3. Hallucination rate calc (paid) | ✅ Complete | 75% | 5,400 paid model rows analyzed |
 | 3. Hallucination rate calc (OSS) | ⏳ Pending | 25% | Awaiting open-source data |
 | 4. Length comparison | ✅ Complete | 100% | Stratified by short/long (paid models) |
 | 5. Inter-rater reliability | ⚠️ Pending | 0% | Module created; awaits manual rater labels |
@@ -250,7 +250,7 @@ Example from `*_hallucination_focus.json`:
 |-----------|---------|
 | `pilot.py` | Main study runner (CLI interface) |
 | `main.py` | Alternative study entry point |
-| `02_data/experimental/combined_vignettes_clean.json` | Input vignette dataset (293) |
+| `02_data/experimental/combined_vignettes_clean.json` | Input vignette dataset (300) |
 | `04_results/raw_json/*.json` | Raw model outputs |
 | `04_results/analysis_ready/*_summary.json` | Hallucination summary metrics |
 | `04_results/analysis_ready/*_DASHBOARD.md` | Human-readable results dashboard |
