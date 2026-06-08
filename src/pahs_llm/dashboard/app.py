@@ -20,18 +20,15 @@ import plotly.graph_objects as go
 import streamlit as st
 from scipy import stats
 
-# Import modular components — 03_src/dashboard/ package
-import sys
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "03_src"))
-
-from dashboard.config import (
+# Import modular components — pahs_llm.dashboard package
+from pahs_llm.dashboard.config import (
     TRIAL_CSV, TABLE2_CSV, TABLE3_CSV, TABLE4_CSV, TABLE1_CSV,
     RUN_SUMMARY, DASHBOARD_JSON, VIGNETTES_JSON,
     CATEGORY_COLORS, CATEGORY_ORDER, MODEL_COLORS, MODEL_LABELS,
     CONDITION_COLORS, TOKEN_CATEGORY_LABELS, EXCLUDE_MODELS,
     model_label, pct,
 )
-from dashboard.utils import (
+from pahs_llm.dashboard.utils import (
     category_rates, bootstrap_ci, confidence_correlation_analysis,
     analyze_safety_audit_log, add_statistical_significance,
 )
