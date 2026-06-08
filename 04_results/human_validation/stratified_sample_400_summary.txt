@@ -1,0 +1,63 @@
+======================================================================
+STRATIFIED SAMPLING SUMMARY — 400 PSYCHIATRIST RATINGS
+======================================================================
+
+Random seed: 20260602
+Total ratings: 400
+
+Sample allocation (Model × Condition × Length):
+------------------------------------------------------------
+Model                                         Condition              Length      N
+------------------------------------------------------------
+anthropic/claude-haiku-4-5                    DEFAULT                short      16
+anthropic/claude-haiku-4-5                    DEFAULT                long       17
+anthropic/claude-haiku-4-5                    DETERMINISTIC          short      17
+anthropic/claude-haiku-4-5                    DETERMINISTIC          long       16
+anthropic/claude-haiku-4-5                    SAFETY_INSTRUCTION     short      17
+anthropic/claude-haiku-4-5                    SAFETY_INSTRUCTION     long       17
+gemini/gemini-3.1-flash-lite                  DEFAULT                short      17
+gemini/gemini-3.1-flash-lite                  DEFAULT                long       17
+gemini/gemini-3.1-flash-lite                  DETERMINISTIC          short      17
+gemini/gemini-3.1-flash-lite                  DETERMINISTIC          long       17
+gemini/gemini-3.1-flash-lite                  SAFETY_INSTRUCTION     short      16
+gemini/gemini-3.1-flash-lite                  SAFETY_INSTRUCTION     long       17
+openai/gpt-5.4-mini                           DEFAULT                short      16
+openai/gpt-5.4-mini                           DEFAULT                long       17
+openai/gpt-5.4-mini                           DETERMINISTIC          short      17
+openai/gpt-5.4-mini                           DETERMINISTIC          long       17
+openai/gpt-5.4-mini                           SAFETY_INSTRUCTION     short      17
+openai/gpt-5.4-mini                           SAFETY_INSTRUCTION     long       16
+openrouter/meta-llama/llama-3.3-70b-instruct  DEFAULT                short      17
+openrouter/meta-llama/llama-3.3-70b-instruct  DEFAULT                long       16
+openrouter/meta-llama/llama-3.3-70b-instruct  DETERMINISTIC          short      17
+openrouter/meta-llama/llama-3.3-70b-instruct  DETERMINISTIC          long       16
+openrouter/meta-llama/llama-3.3-70b-instruct  SAFETY_INSTRUCTION     short      16
+openrouter/meta-llama/llama-3.3-70b-instruct  SAFETY_INSTRUCTION     long       17
+------------------------------------------------------------
+
+Marginal totals by model:
+  anthropic/claude-haiku-4-5: 100
+  gemini/gemini-3.1-flash-lite: 101
+  openai/gpt-5.4-mini: 100
+  openrouter/meta-llama/llama-3.3-70b-instruct: 99
+
+Marginal totals by condition:
+  DEFAULT: 133
+  DETERMINISTIC: 134
+  SAFETY_INSTRUCTION: 133
+
+Marginal totals by length:
+  short: 200
+  long: 200
+
+Model anonymization key (KEEP SECRET until ratings complete):
+  Model_A ← anthropic/claude-haiku-4-5
+  Model_B ← openrouter/meta-llama/llama-3.3-70b-instruct
+  Model_C ← gemini/gemini-3.1-flash-lite
+  Model_D ← openai/gpt-5.4-mini
+
+Blinding measures:
+  - Model names replaced with anonymous IDs
+  - Rating order randomized
+  - Rater sees: case presentation, diagnosis, management, length, condition
+  - Rater does NOT see: model name, case_id, category, hallucination flags
