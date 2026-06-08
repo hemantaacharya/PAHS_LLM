@@ -1,0 +1,51 @@
+{
+  "mode": "strict",
+  "plugins": {
+    "MD013": {
+      "enabled": true,
+      "line_length": 600,
+      "heading_line_length": 200,
+      "code_block_line_length": 999,
+      "strict": false
+    },
+    "MD024": {
+      "enabled": true,
+      "siblings_only": true
+    },
+    "MD036": {
+      "enabled": false
+    },
+    "MD034": {
+      "enabled": false
+    },
+    "MD040": {
+      "enabled": false
+    },
+    "MD029": {
+      "enabled": false
+    },
+    "MD026": {
+      "enabled": false
+    },
+    "MD037": {
+      "enabled": false
+    },
+    "MD018": {
+      "enabled": false
+    },
+    "MD019": {
+      "enabled": false
+    },
+    "MD001": {
+      "enabled": false
+    },
+    "MD047": {
+      "enabled": false
+    }
+  },
+  "extensions": {
+    "front-matter": {
+      "enabled": true
+    }
+  }
+}

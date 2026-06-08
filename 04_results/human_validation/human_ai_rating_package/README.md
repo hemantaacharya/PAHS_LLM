@@ -5,28 +5,33 @@ This folder contains all materials for the PAHS LLM Hallucination Study 2026 hum
 ## Package Contents
 
 ### For Psychiatrists (4 files)
+
 - **Psychiatrist_1_rating_sheet.xlsx** — Rating sheet with 100 cases
 - **Psychiatrist_2_rating_sheet.xlsx** — Rating sheet with 100 cases
 - **Psychiatrist_3_rating_sheet.xlsx** — Rating sheet with 100 cases
 - **Psychiatrist_4_rating_sheet.xlsx** — Rating sheet with 100 cases
 
 Each rating sheet includes:
+
 - **Instructions sheet** with detailed rating guidelines
 - **Rating Sheet** with 100 blinded cases (different cases per psychiatrist)
 - Data validation (0 or 1 only for Hallucination column)
 - Freeze panes and auto-filter
 
 ### For Analysis (2 files)
+
 - **rater_sample_400_blinded.csv** — All 400 cases with anonymized model information
 - **rater_sample_400_key.csv** — Model key (A, B, C, D → actual model names)
 
 ### Master Sheets (4 files)
+
 - **Psychiatrist_1_master_sheet.xlsx** — Progress tracker and consolidation template
 - **Psychiatrist_2_master_sheet.xlsx** — Progress tracker and consolidation template
 - **Psychiatrist_3_master_sheet.xlsx** — Progress tracker and consolidation template
 - **Psychiatrist_4_master_sheet.xlsx** — Progress tracker and consolidation template
 
 Each master sheet includes:
+
 - Progress tracker (completed cases, ratings, notes)
 - Metadata reference (case details, model info)
 - Consolidation template (for combining all ratings)
@@ -44,6 +49,7 @@ Each master sheet includes:
 ## Rating Instructions
 
 Each rating sheet contains detailed instructions including:
+
 - Study background and purpose
 - Task description (rate if LLM incorporated fabricated term)
 - Hallucination rating scale (0 = NO, 1 = YES)
@@ -59,6 +65,7 @@ python scripts/calculate_kappa_4raters.py
 ```
 
 This will compute:
+
 - Pairwise Cohen's Kappa (6 pairs: P1-P2, P1-P3, P1-P4, P2-P3, P2-P4, P3-P4)
 - Fleiss' Kappa for multi-rater agreement
 

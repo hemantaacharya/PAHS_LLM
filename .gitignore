@@ -1,7 +1,48 @@
+# Environment
 .env
-/.venv/
+.venv/
 venv/
+
+# Data (large files)
 02_data/raw/
+02_data/experimental/
 04_results/raw_json/
+04_results/raw_csv/
+04_results/model_specific/
+04_results/archive/
+04_results/human_validation/
+
+# Python
 __pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+
+# IDE
 .DS_Store
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Logs & temp
+*.log
+*.pid
+*.tmp
+*~
+
+# Testing & coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# OS
+Thumbs.db

@@ -2,68 +2,101 @@
 
 Patan Academy of Health Sciences - LLM Hallucination Study
 
-## Setup
+Multi-model evaluation of hallucinations in psychiatric clinical vignettes using fabricated token injection.
 
-Use the workspace-local `.venv` as the single Python environment for this repo.
+## Quick Start
 
 ```bash
-/opt/homebrew/bin/python3 -m venv .venv
+# Setup
+python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-```
+make install-dev
 
-## Run
+# Configure API keys
+cp .env.example .env
+# Edit .env with your API keys
 
-Run a single provider or model with the new CLI filters:
-
-```bash
-python pilot.py --provider openai
+# Run the study
 python main.py --provider anthropic
-python pilot.py --model openai/gpt-5-mini
+python pilot.py --provider openai
 ```
 
-## Model Selection & Customization
+## Project Structure
 
-The default models are low-cost variants suitable for efficient testing. To use different model versions or customize the defaults:
+```
+PAHS_LLM/
++-- src/pahs_llm/          # Main Python package
+|   +-- core/              # Data models and schemas
+|   +-- evaluation/        # Hallucination analysis and metrics
+|   +-- dashboard/         # Streamlit dashboard
++-- scripts/               # Entry-point scripts
++-- tests/                 # Test suite
++-- docs/                  # Documentation
++-- data/                  # Data directory (gitignored)
++-- results/               # Results directory (gitignored)
++-- Phase4_InterRater_ExcelSheets/  # Human validation materials
+```
+
+## Commands
 
 ```bash
-# Use higher-performance models
-export PAHS_OPENAI_MODEL=openai/gpt-5.4
-export PAHS_ANTHROPIC_MODEL=anthropic/claude-3-sonnet
-export PAHS_GEMINI_MODEL=google/gemini-2.0-flash
-
-# Then run
-python pilot.py --vignettes-count 300
+make install          # Install dependencies
+make install-dev      # Install dev dependencies + pre-commit hooks
+make lint             # Run linters
+make format           # Format code
+make test             # Run tests
+make test-cov         # Run tests with coverage
+make clean            # Clean build artifacts
+make generate-sheets  # Generate rater Excel sheets
+make analyze-agreement # Analyze inter-rater agreement
+make run-dashboard    # Launch Streamlit dashboard
 ```
-
-**For detailed model comparison and upgrade guidance, see [MODEL_REFINEMENT_GUIDE.md](MODEL_REFINEMENT_GUIDE.md).**
 
 ## Extract Hallucination Data
 
-To pull only hallucination-focused rows from a results file, run:
-
 ```bash
-python 03_src/evaluation/extract_hallucination_data.py 04_results/raw_json/PILOT_2026_RESULTS.json
+python -m pahs_llm.evaluation.extract_hallucination_data \
+    04_results/raw_json/PAHS_STUDY_RESULTS_2026_openai_gpt-5.4-mini.json
 ```
-
-Use `--format csv` if you want a flat table instead of JSON.
 
 ## Pooled Multi-Model Analysis
 
-To generate standardized pooled tables across all raw JSON result files:
-
 ```bash
-python 03_src/evaluation/pool_hallucination_analysis.py
+python -m pahs_llm.evaluation.pool_hallucination_analysis
 ```
 
-This writes trial-level and aggregate CSV tables to `04_results/analysis_ready/pooled/`.
+Writes trial-level and aggregate CSV tables to `04_results/analysis_ready/pooled/`.
 
 ## Interactive Dashboard
 
-Launch the Streamlit dashboard (requires pooled analysis output):
-
 ```bash
-streamlit run dashboard.py
+streamlit run src/pahs_llm/dashboard/app.py
 ```
 
-The dashboard includes model leaderboard, condition/length effects, token-category breakdowns, and a per-case explorer across all 4 study models (7,200 trials).
+Includes model leaderboard, condition/length effects, token-category breakdowns, and per-case explorer across all 4 study models (7,200 trials).
+
+## Documentation
+
+### Quick Start & Setup
+- [docs/quick-start.md](docs/quick-start.md) - Get started in 5 minutes
+- [docs/project-structure.md](docs/project-structure.md) - Project organization
+- [docs/architecture.md](docs/architecture.md) - Technical architecture
+
+### Study Documentation
+- [COMPLETE_METHODS_SECTION.md](COMPLETE_METHODS_SECTION.md) - Full technical methods for publication
+- [CHANGELOG.md](CHANGELOG.md) - Version history
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
+
+### Dashboard
+- [docs/dashboard.md](docs/dashboard.md) - Dashboard features and usage
+
+### Phase 4: Human Validation
+- [Phase4_InterRater_ExcelSheets/README_Phase4.md](Phase4_InterRater_ExcelSheets/README_Phase4.md) - Overview
+- [Phase4_InterRater_ExcelSheets/phase4-guide.md](Phase4_InterRater_ExcelSheets/phase4-guide.md) - Complete workflow
+- [Phase4_InterRater_ExcelSheets/INTER_RATER_RATING_GUIDE.md](Phase4_InterRater_ExcelSheets/INTER_RATER_RATING_GUIDE.md) - Rater training
+- [Phase4_InterRater_ExcelSheets/PRACTICE_CASES_FOR_RATER_CALIBRATION.md](Phase4_InterRater_ExcelSheets/PRACTICE_CASES_FOR_RATER_CALIBRATION.md) - Training cases
+- [Phase4_InterRater_ExcelSheets/RATER_QUICK_REFERENCE_CARD.md](Phase4_InterRater_ExcelSheets/RATER_QUICK_REFERENCE_CARD.md) - Decision guide
+
+## License
+
+[MIT](LICENSE)

@@ -1,5 +1,0 @@
-anonymized_model,actual_model
-Model_A,anthropic/claude-haiku-4-5
-Model_B,gemini/gemini-3.1-flash-lite
-Model_C,openai/gpt-5.4-mini
-Model_D,openrouter/meta-llama/llama-3.3-70b-instruct

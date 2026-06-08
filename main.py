@@ -7,15 +7,11 @@ import time
 import litellm
 from datetime import datetime
 
-# Path Fix for 03_src
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.join(current_dir, "03_src"))
-
 import instructor
 from litellm import completion
 from dotenv import load_dotenv
-from core.schemas import ClinicalOutput
-from evaluation.extract_hallucination_data import (
+from pahs_llm.core.schemas import ClinicalOutput
+from pahs_llm.evaluation.extract_hallucination_data import (
     extract_hallucination_records,
     summarize_boolean_logic,
 )

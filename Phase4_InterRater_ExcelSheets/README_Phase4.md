@@ -1,4 +1,5 @@
 # Phase 4 Inter-Rater Hallucination Validation
+
 ## PAHS LLM Study — Human Validation Materials
 
 ---
@@ -55,6 +56,7 @@
 ## 📁 FILE DESCRIPTIONS
 
 ### Excel Templates (Your Rating Forms)
+
 ```
 PAHS_IRR_RaterA_Template.xlsx (61 KB)
 ├─ Instructions sheet: Complete rater training
@@ -68,6 +70,7 @@ PAHS_IRR_RaterB_Template.xlsx (61 KB)
 ### Excel Columns
 
 **Pre-filled (don't edit):**
+
 - A: Rater ID (A or B)
 - B: Case number (1–78)
 - C: Case ID (blinded)
@@ -76,6 +79,7 @@ PAHS_IRR_RaterB_Template.xlsx (61 KB)
 - F: **LLM response** (full structured output)
 
 **Your ratings (complete these):**
+
 - G: **Q1 — Hallucination rating** (0 or 1) ⭐ **REQUIRED**
 - H: Q2 — Confidence (1–3)
 - I–N: Q3 — Location checkboxes
@@ -85,6 +89,7 @@ PAHS_IRR_RaterB_Template.xlsx (61 KB)
 - R: Q7 — Overall confidence (1–3)
 
 ### Training & Reference Documents
+
 ```
 INTER_RATER_RATING_GUIDE.md (20+ pages)
   → Complete instructions, 7 worked examples, decision rules
@@ -107,6 +112,7 @@ PHASE4_EXCEL_MATERIALS_GUIDE.md (15+ pages)
 ```
 
 ### Python Scripts (for analysis)
+
 ```
 ../scripts/generate_interrater_rating_excel.py
   → Creates the Excel templates (already run)
@@ -130,6 +136,7 @@ PHASE4_EXCEL_MATERIALS_GUIDE.md (15+ pages)
 ### Key Distinction
 
 **MENTION ≠ INCORPORATION**
+
 - ❌ **Mention only**: "The patient's serotonergic tone modulation index was mentioned in the case."
 - ✅ **Incorporation**: "The patient has decreased serotonergic tone modulation index, suggesting depression (diagnosis based on fabricated term)."
 
@@ -146,18 +153,21 @@ Use the decision tree in **RATER_QUICK_REFERENCE_CARD.md**:
 ## 📊 TIMELINE
 
 ### Week 1: Training & Preparation
+
 - Receive Excel template
 - Review INTER_RATER_RATING_GUIDE.md (1 hour)
 - Complete PRACTICE_CASES_FOR_RATER_CALIBRATION.md (~30 min)
 - Achieve κ ≥ 0.70 on practice cases
 
 ### Week 2: Rating
+
 - Rate 78 cases in your Excel template
 - Expected time: ~6.5 hours total (spread over 5–7 days)
 - Pace: 10–15 cases per day (30–50 min/day) is comfortable
 - Use RATER_QUICK_REFERENCE_CARD.md for rapid decisions
 
 ### Week 3: Analysis (PI only)
+
 - PI calculates Cohen's kappa
 - PI identifies discordant cases
 - PI generates summary report
@@ -199,18 +209,23 @@ After both raters complete all 78 cases:
 ## 🔧 TROUBLESHOOTING
 
 ### Q: What if I'm unsure about a case?
+
 **A:** Check the decision tree in RATER_QUICK_REFERENCE_CARD.md, add a note in Q6_Notes, and move on. Accuracy is more important than speed.
 
 ### Q: Can I edit the vignette or LLM response?
+
 **A:** No. Columns A–F are read-only reference data. Only edit columns G–R (Q1–Q7).
 
 ### Q: How long should each case take?
+
 **A:** Usually 3–5 minutes per case. If <2 min, you might be rushing; if >15 min, read RATER_QUICK_REFERENCE_CARD.md for faster decisions.
 
 ### Q: Can I save my progress and come back later?
+
 **A:** Yes. The Excel file auto-saves. You can close and reopen anytime.
 
 ### Q: What if the LLM response is really long?
+
 **A:** Scroll through the full response, then focus on the highlighted [FABRICATED] term. Did it use it in diagnosis/management?
 
 ---
@@ -226,6 +241,7 @@ After both raters complete all 78 cases:
 ## ✅ FINAL CHECKLIST
 
 Before you start:
+
 - [ ] Received Excel template (RaterA or RaterB)
 - [ ] Reviewed INTER_RATER_RATING_GUIDE.md
 - [ ] Completed PRACTICE_CASES_FOR_RATER_CALIBRATION.md
@@ -240,4 +256,3 @@ Before you start:
 **Expected Duration:** 6–8 hours per rater over 5–7 days
 
 Thank you for contributing to this important research on LLM hallucinations in psychiatry!
-
