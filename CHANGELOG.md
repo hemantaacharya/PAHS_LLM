@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.0] - 2026-06-08
 
 ### Added
+
 - Initial release of PAHS LLM Hallucination Study pipeline
 - Multi-model LLM evaluation framework (OpenAI, Anthropic, Gemini, OpenRouter)
 - Fabricated token injection system for hallucination detection
@@ -18,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - Stratified sampling across all model/condition/length combinations
 
 ### Project Structure
+
 - Modular `src/pahs_llm/` package with core, evaluation, and dashboard modules
 - `scripts/` for entry-point scripts
 - `tests/` with pytest infrastructure

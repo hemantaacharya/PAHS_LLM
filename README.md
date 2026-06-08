@@ -78,19 +78,23 @@ Includes model leaderboard, condition/length effects, token-category breakdowns,
 ## Documentation
 
 ### Quick Start & Setup
+
 - [docs/quick-start.md](docs/quick-start.md) - Get started in 5 minutes
 - [docs/project-structure.md](docs/project-structure.md) - Project organization
 - [docs/architecture.md](docs/architecture.md) - Technical architecture
 
 ### Study Documentation
+
 - [COMPLETE_METHODS_SECTION.md](COMPLETE_METHODS_SECTION.md) - Full technical methods for publication
 - [CHANGELOG.md](CHANGELOG.md) - Version history
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contribution guidelines
 
 ### Dashboard
+
 - [docs/dashboard.md](docs/dashboard.md) - Dashboard features and usage
 
 ### Phase 4: Human Validation
+
 - [Phase4_InterRater_ExcelSheets/README_Phase4.md](Phase4_InterRater_ExcelSheets/README_Phase4.md) - Overview
 - [Phase4_InterRater_ExcelSheets/phase4-guide.md](Phase4_InterRater_ExcelSheets/phase4-guide.md) - Complete workflow
 - [Phase4_InterRater_ExcelSheets/INTER_RATER_RATING_GUIDE.md](Phase4_InterRater_ExcelSheets/INTER_RATER_RATING_GUIDE.md) - Rater training

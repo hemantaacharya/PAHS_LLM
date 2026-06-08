@@ -12,23 +12,27 @@ Thank you for your interest in contributing to the PAHS LLM Hallucination Study 
 ## Development Workflow
 
 ### Code Style
+
 - Python: Follow PEP 8 with ruff enforcement
 - Line length: 100 characters
 - Use type hints where practical
 
 ### Running Tests
+
 ```bash
 make test          # Run all tests
 make test-cov      # Run with coverage
 ```
 
 ### Linting and Formatting
+
 ```bash
 make lint          # Check for issues
 make format        # Auto-format code
 ```
 
 ### Pre-commit Hooks
+
 Pre-commit hooks are configured automatically with `make install-dev`. They run ruff linting and formatting on every commit.
 
 ## Project Structure
