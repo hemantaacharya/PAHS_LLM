@@ -57,6 +57,7 @@ def convert_markdown_to_word() -> None:
 
     markdown_lines = INPUT_MD.read_text(encoding="utf-8").splitlines()
     title_written = False
+    in_references_section = False
 
     for raw_line in markdown_lines:
         line = raw_line.rstrip()
@@ -73,7 +74,9 @@ def convert_markdown_to_word() -> None:
             continue
 
         if line.startswith("## "):
-            add_paragraph(document, line[3:].strip(), style="Heading 1")
+            heading_text = line[3:].strip()
+            add_paragraph(document, heading_text, style="Heading 1")
+            in_references_section = heading_text.lower() == "references"
             continue
 
         if line.startswith("### "):
@@ -87,7 +90,11 @@ def convert_markdown_to_word() -> None:
 
         number_match = re.match(r"^\d+\.\s+(.*)$", line)
         if number_match:
-            add_paragraph(document, number_match.group(1).strip(), style="List Number")
+            if in_references_section:
+                # Keep explicit numbering from markdown so references always start at 1.
+                add_paragraph(document, line.strip())
+            else:
+                add_paragraph(document, number_match.group(1).strip(), style="List Number")
             continue
 
         add_paragraph(document, line.strip())

@@ -57,7 +57,7 @@ Descriptive statistics were used to summarize hallucination rates overall and by
 
 Comparative analyses focused on effect-size estimation rather than hypothesis-testing alone. Condition effects and vignette-length effects were summarized using absolute risk differences and risk ratios with 95% confidence intervals at the pooled trial level. Stratified summaries were generated for each model and condition combination.
 
-Within the human-validation sample, automated hallucination labels were compared with psychiatrist expert judgments to assess concordance between the scripted classification pipeline and clinician review. Agreement was summarized using Cohen's kappa.
+Within the human-validation sample, automated hallucination labels were compared with psychiatrist expert judgments to assess concordance between the scripted classification pipeline and clinician review. Agreement was summarized using Cohen's kappa.<sup>4</sup>
 
 All data processing, pooled analyses, and human-validation workflows were performed using project-specific Python scripts.
 
@@ -75,11 +75,11 @@ Any missing or invalid model outputs were documented and excluded from pooled an
 
 ## References
 
-1. Thirunavukarasu AJ, Oor A, Gramotnev G, et al. Large language models in medicine. Nat Med. 2023;29:1930-1940.
+1. Thirunavukarasu AJ, Oor A, Gramotnev G, et al. Large language models in medicine. Nat Med. 2023;29:1930-40.
 2. Ji Z, Lee N, Frieske R, et al. Survey of hallucination in natural language generation. ACM Comput Surv. 2023;55(12):1-38.
-3. U.S. Department of Health & Human Services. HIPAA Privacy Rule Safe Harbor for De-identification. 45 CFR 164.514(b).
-4. Landis JR, Koch GG. The measurement of observer agreement for categorical data. Biometrics. 1977;33(1):159-174.
-5. Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc. 1927;22(158):209-212.
-6. Liu X, Rivera SC, Moher D, Calvert MJ, Denniston AK, SPIRIT-AI and CONSORT-AI Working Group. Reporting guidelines for clinical trial reports for interventions involving artificial intelligence: the CONSORT-AI extension. Nat Med. 2020;26:1364-1374.
-7. Rivera SC, Liu X, Chan AW, et al. Guidelines for clinical trial protocols for interventions involving artificial intelligence: the SPIRIT-AI extension. Nat Med. 2020;26:1351-1363.
-8. Holtzman A, Buys J, Du L, Forbes M, Choi Y. The curious case of neural text degeneration. arXiv. 2019;1904.09751.
+3. U.S. Department of Health & Human Services. HIPAA Privacy Rule Safe Harbor for De-identification. 45 CFR 164.514(b) [Internet]. [cited 2026 Jun 29]. Available from: https://www.hhs.gov/hipaa/for-professionals/privacy/special-topics/de-identification/index.html
+4. Landis JR, Koch GG. The measurement of observer agreement for categorical data. Biometrics. 1977;33(1):159-74.
+5. Wilson EB. Probable inference, the law of succession, and statistical inference. J Am Stat Assoc. 1927;22(158):209-12.
+6. Liu X, Rivera SC, Moher D, Calvert MJ, Denniston AK, SPIRIT-AI and CONSORT-AI Working Group. Reporting guidelines for clinical trial reports for interventions involving artificial intelligence: the CONSORT-AI extension. Nat Med. 2020;26:1364-74.
+7. Rivera SC, Liu X, Chan AW, et al. Guidelines for clinical trial protocols for interventions involving artificial intelligence: the SPIRIT-AI extension. Nat Med. 2020;26:1351-63.
+8. Holtzman A, Buys J, Du L, Forbes M, Choi Y. The curious case of neural text degeneration [preprint]. arXiv. 2019 [cited 2026 Jun 29]. Available from: https://arxiv.org/abs/1904.09751
