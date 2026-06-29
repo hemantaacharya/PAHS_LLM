@@ -1,0 +1,157 @@
+Methods
+
+Study Design and Setting
+
+This study was a cross-sectional, experimental in-vitro evaluation of
+large language model (LLM) behavior when processing de-identified
+psychiatric clinical vignettes. The design was chosen to quantify
+hallucination adoption under controlled prompt conditions, following the
+broader literature on LLM use in medicine and the known risk of
+hallucinated or unfaithful outputs in generated text [1,2,3,4].
+
+The work was conducted using psychiatric inpatient records from Patan
+Hospital, Patan Academy of Health Sciences, Kathmandu, Nepal. The source
+records covered admissions from January 2020 through December 2024 and
+were processed only after de-identification.
+
+Data Source and Case Selection
+
+Cases were identified from the psychiatry ward electronic medical record
+archive. Inclusion criteria were complete clinical documentation,
+including presenting complaint, relevant history, mental status
+examination, diagnostic formulation, and discharge diagnosis, together
+with sufficient narrative detail to support vignette construction.
+Exclusion criteria were short admissions with incomplete assessment,
+duplicate records, unclear linkage, or documentation that could not be
+adequately de-identified.
+
+De-identification followed standard Safe Harbor principles, with direct
+identifiers removed before research access [5]. The resulting cases were
+used only as text prompts; no patient-level clinical decisions were made
+from the study outputs.
+
+Vignette Construction
+
+Each selected case was transformed into a standardized clinical vignette
+by a psychiatry clinician-researcher. Two versions were prepared from
+each case: a short version with approximately 50-60 words and a long
+version with approximately 90-100 words. This allowed evaluation of
+whether compact versus detailed clinical summaries altered hallucination
+susceptibility.
+
+To create a controlled hallucination challenge, each vignette contained
+one deliberately fabricated clinical term. The fabricated term was
+designed to be plausible in form but absent from standard psychiatric
+terminology. This approach operationalizes hallucination as the
+incorporation of a non-existent term into downstream reasoning, which is
+consistent with current definitions of factual inconsistency in large
+language model outputs [2,4].
+
+Experimental Procedure
+
+The vignettes were evaluated across four LLM configurations: three
+commercial API models and one open-source comparison model. Each
+vignette was tested under three prompt conditions: default,
+safety-instruction, and deterministic decoding. The default and
+safety-instruction conditions used the same clinical decision-support
+framing, while the safety-instruction condition added an explicit
+verification step for unfamiliar clinical terms. The deterministic
+condition reduced sampling variability to test whether lower decoding
+randomness altered hallucination behavior [12].
+
+The planned factorial design crossed model, prompt condition, and
+vignette length. The finalized dataset contained 7,074 completed trials
+after accounting for pilot runs and model-specific execution
+differences.
+
+Outcome Definitions
+
+The primary outcome was hallucination adoption, defined as any trial in
+which the model acknowledged, endorsed, elaborated on, or incorporated
+the fabricated term into its diagnostic reasoning, differential
+diagnosis, or management plan. Secondary outcomes were model
+self-detection of the fabricated term, false-positive flagging of real
+clinical content, and dangerous reasoning hallucination, defined as a
+hallucination that influenced the top diagnosis or management
+recommendation.
+
+All model responses were parsed into a structured format before scoring.
+Binary hallucination labels were derived from the presence or absence of
+the fabricated term in key response fields, including the presentation
+summary, diagnosis, reasoning, and management.
+
+Human Validation and Reliability
+
+A stratified subset of approximately 78 cases was independently reviewed
+by four psychiatrists blinded to model identity and prompt condition.
+The reviewers applied the same hallucination definition used in the
+automated scoring pipeline. Inter-rater reliability was summarized using
+Cohen's kappa and percent agreement, with interpretation guided by
+standard reliability frameworks [6,7].
+
+Statistical Analysis
+
+Hallucination rates were summarized overall and by model, prompt
+condition, and vignette length. Binomial 95% confidence intervals were
+calculated using the Wilson method, which is preferred for proportion
+estimates in moderate sample sizes [8]. Paired comparisons between
+conditions were assessed with McNemar's test because the same vignette
+cases were reused across prompt conditions [9].
+
+Planned sensitivity analyses included comparison of automated versus
+human-validated labels in the review subset, and stratified analyses of
+the main effects of model, prompt condition, and vignette length. The
+nominal significance threshold was two-sided alpha = 0.05.
+
+Ethics and Reporting
+
+The study used retrospectively de-identified clinical records and did
+not involve direct patient contact. The project followed standard
+privacy protections for de-identified health data [5]. The reporting
+structure was aligned with current AI reporting guidance, including
+CONSORT-AI and SPIRIT-AI recommendations where applicable [10,11].
+
+References
+
+1.  Thirunavukarasu AJ, Oor A, Gramotnev G, et al. Large language models
+    in medicine. Nature Medicine. 2023;29:1930-1940.
+
+2.  Ji Z, Lee N, Frieske R, et al. Survey of hallucination in natural
+    language generation. ACM Computing Surveys. 2023;55(12):1-38.
+
+3.  Singhal K, Azour S, Shen JH, et al. Towards expert-level medical
+    question answering with large language models. arXiv:2305.09617.
+
+4.  Maynez J, Narayan S, Bohnet B, McDonald R. On faithfulness and
+    factuality in abstractive summarization. arXiv:2005.00661.
+
+5.  U.S. Department of Health & Human Services. HIPAA Privacy Rule Safe
+    Harbor for De-identification. 45 CFR 164.514(b).
+
+6.  Landis JR, Koch GG. The measurement of observer agreement for
+    categorical data. Biometrics. 1977;33(1):159-174.
+
+7.  Koo TK, Li MY. A guideline of selecting and reporting intraclass
+    correlation coefficients for reliability research. Journal of
+    Chiropractic Medicine. 2016;15(2):155-163.
+
+8.  Wilson EB. Probable inference, the law of succession, and
+    statistical inference. Journal of the American Statistical
+    Association. 1927;22(158):209-212.
+
+9.  McNemar Q. Note on the sampling error of the difference between
+    correlated proportions or percentages. Psychometrika.
+    1947;12(2):153-157.
+
+10. Liu X, Rivera SC, Moher D, Calvert MJ, Denniston AK,
+    Spirit-AI/CONSORT-AI Working Group. Reporting guidelines for
+    clinical trial reports for interventions involving artificial
+    intelligence: the CONSORT-AI extension. Nature Medicine.
+    2020;26:1364-1374.
+
+11. Rivera SC, Liu X, Chan AW, et al. SPIRIT-AI extension: guidelines
+    for clinical trial protocols for interventions involving artificial
+    intelligence. Nature Medicine. 2020;26:1351-1363.
+
+12. Holtzman A, Buys J, Du L, Forbes M, Choi Y. The curious case of
+    neural text degeneration. arXiv:1904.09751.

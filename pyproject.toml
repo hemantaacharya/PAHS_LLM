@@ -27,6 +27,7 @@ dependencies = [
     "instructor",
     "pydantic",
     "python-dotenv",
+    "python-docx",
     "pandas",
     "scipy",
     "streamlit",
