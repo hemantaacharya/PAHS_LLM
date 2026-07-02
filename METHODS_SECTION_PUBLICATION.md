@@ -14,7 +14,9 @@ All records were de-identified before analysis. Direct patient identifiers were 
 
 ## Vignette Development
 
-De-identified records were rewritten into standardized psychiatry vignettes by a consultant psychiatrist. Each vignette contained one intentionally fabricated clinical detail, such as a non-existent test, drug, symptom, or clinical metric, while all remaining content was kept clinically plausible and internally consistent. This design operationalized hallucination as model endorsement or elaboration of a false clinical element embedded in an otherwise realistic case.<sup>2</sup>
+De-identified records were rewritten into standardized psychiatry vignettes by a consultant psychiatrist. Each vignette included one intentionally fabricated clinical detail (e.g., a non-existent test, drug, symptom, or clinical metric), while all other content was kept clinically plausible and internally consistent. This design operationalized hallucination as model endorsement or elaboration of a false clinical element embedded in an otherwise realistic case.<sup>2</sup>
+
+Before finalizing fabricated terms, each candidate was cross-checked against DSM-5 and ICD-10 terminology using a Python script. Terms were retained only if they could not be verified in either source.
 
 Two versions of each vignette were created:
 
@@ -49,7 +51,7 @@ The study size was determined by the number of eligible psychiatry inpatient rec
 
 A stratified human-validation sample of 400 unique model responses was drawn across model type, prompting condition, and vignette length. These responses were distributed across four psychiatrists, with each psychiatrist reviewing 100 responses. This phase was used to provide expert clinical review of the automated response classifications.
 
-Because the 400 responses were uniquely allocated across psychiatrists rather than co-rated in an overlapping design, the primary validation statistic was agreement between automated hallucination classification and expert psychiatrist review, rather than psychiatrist-to-psychiatrist inter-rater reliability. Cohen's kappa was used to quantify agreement between the scripted binary hallucination label and the expert psychiatrist judgment for the reviewed responses.<sup>4</sup>
+Because the 400 responses were uniquely allocated across psychiatrists rather than co-rated in an overlapping design, the primary validation statistic was agreement between automated and expert labels, rather than psychiatrist-to-psychiatrist inter-rater reliability. For endpoint alignment with the rater task (incorporation of fabricated terms), the automated comparator was `adoption_rate_failure` and the expert comparator was psychiatrist `Hallucination_Rating`. Cohen's kappa was used to quantify agreement for this binary comparison.<sup>4</sup>
 
 ## Statistical Analysis
 
@@ -57,7 +59,7 @@ Descriptive statistics were used to summarize hallucination rates overall and by
 
 Comparative analyses focused on effect-size estimation rather than hypothesis-testing alone. Condition effects and vignette-length effects were summarized using absolute risk differences and risk ratios with 95% confidence intervals at the pooled trial level. Stratified summaries were generated for each model and condition combination.
 
-Within the human-validation sample, automated hallucination labels were compared with psychiatrist expert judgments to assess concordance between the scripted classification pipeline and clinician review. Agreement was summarized using Cohen's kappa.<sup>4</sup>
+Within the human-validation sample, endpoint-aligned automated labels (`adoption_rate_failure`) were compared with psychiatrist expert judgments (`Hallucination_Rating`) to assess concordance between scripted classification and clinician review. Agreement was summarized using Cohen's kappa.<sup>4</sup> As a sensitivity analysis, `hallucination_detected` (model self-detection/flagging signal) was also compared with psychiatrist ratings to evaluate label-definition effects.
 
 All data processing, pooled analyses, and human-validation workflows were performed using project-specific Python scripts.
 

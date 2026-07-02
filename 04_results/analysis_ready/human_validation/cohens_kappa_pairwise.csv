@@ -1,0 +1,7 @@
+rater_1,rater_2,n_common_case_ids,cohens_kappa,observed_agreement,expected_agreement,interpretation
+A,B,18,-0.1053,0.6111,0.6481,Poor
+A,C,23,-0.1165,0.7826,0.8053,Poor
+A,D,26,-0.1235,0.7308,0.7604,Poor
+B,C,18,0.4906,0.8333,0.6728,Moderate
+B,D,23,-0.15,0.7391,0.7732,Poor
+C,D,26,0.1947,0.7308,0.6657,Slight

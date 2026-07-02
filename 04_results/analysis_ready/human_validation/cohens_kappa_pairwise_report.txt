@@ -1,0 +1,13 @@
+Pairwise Cohen's Kappa Report
+========================================
+
+Input: PAHS_Reviewer_Hallucination_Rating_standardized.csv
+Matching key: Case_ID (inner join between rater pairs)
+Duplicate (Rater_ID, Case_ID) rows dropped before pairing: 53
+
+A vs B: n=18, kappa=-0.1053, observed=0.6111, expected=0.6481, Poor
+A vs C: n=23, kappa=-0.1165, observed=0.7826, expected=0.8053, Poor
+A vs D: n=26, kappa=-0.1235, observed=0.7308, expected=0.7604, Poor
+B vs C: n=18, kappa=0.4906, observed=0.8333, expected=0.6728, Moderate
+B vs D: n=23, kappa=-0.15, observed=0.7391, expected=0.7732, Poor
+C vs D: n=26, kappa=0.1947, observed=0.7308, expected=0.6657, Slight

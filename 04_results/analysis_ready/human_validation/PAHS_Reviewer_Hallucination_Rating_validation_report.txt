@@ -1,0 +1,17 @@
+PAHS Reviewer Hallucination Rating Validation Report
+========================================================
+
+Input workbook: PAHS_Reviewer_Hallucination_Rating.xlsx
+Rating sheets scanned: 4
+Standardized output CSV rows: 400
+
+Per-sheet summary
+--------------------------------------------------------
+Rating Form - A: header_ok=True, max_row=1000, nonempty_rows=100, candidate_rows=100, missing_ratings=0, unique_case_ids=89, duplicate_case_ids=11
+Rating Form - B: header_ok=True, max_row=301, nonempty_rows=100, candidate_rows=100, missing_ratings=0, unique_case_ids=82, duplicate_case_ids=18
+Rating Form - C: header_ok=True, max_row=301, nonempty_rows=100, candidate_rows=100, missing_ratings=0, unique_case_ids=85, duplicate_case_ids=15
+Rating Form - D: header_ok=True, max_row=301, nonempty_rows=100, candidate_rows=100, missing_ratings=0, unique_case_ids=90, duplicate_case_ids=10
+
+Missing rating details (first 100)
+--------------------------------------------------------
+No missing ratings detected in candidate rows.

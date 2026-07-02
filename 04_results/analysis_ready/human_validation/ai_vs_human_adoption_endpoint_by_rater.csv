@@ -1,0 +1,5 @@
+rater_id,n,cohens_kappa,ci_95_lower,ci_95_upper,observed_agreement,expected_agreement,interpretation,ai_positive_rate,human_positive_rate
+A,100,0.2315,-0.1014,0.5643,0.83,0.7788,Fair,0.09,0.16
+B,100,0.6702,0.4511,0.8894,0.92,0.7574,Substantial,0.11,0.17
+C,100,0.2624,-0.0959,0.6207,0.86,0.8102,Fair,0.03,0.17
+D,100,0.2003,-0.1233,0.524,0.81,0.7624,Fair,0.09,0.18

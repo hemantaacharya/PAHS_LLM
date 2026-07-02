@@ -1,0 +1,28 @@
+AI vs Human Expert Agreement (Cohen's Kappa)
+======================================================
+
+Human source: PAHS_Reviewer_Hallucination_Rating_standardized.csv
+AI source: rater_sample_400.csv
+AI label: hallucination_detected
+Human label: Hallucination_Rating
+
+Mapping and QC
+------------------------------------------------------
+Mapping used: (Rater_ID, Case_Number) via original 400-case split
+Rows merged: 400
+Missing AI labels after merge: 0
+Case_ID mismatches after merge: 0
+Unparsed human ratings excluded: 0
+
+Overall AI vs Human
+------------------------------------------------------
+n=400, kappa=-0.2422, 95% CI=[-0.3557, -0.1287], observed=0.4650, expected=0.5693, Poor
+Confusion matrix (AI rows x Human cols) for labels [0,1]
+[[180, 62], [152, 6]]
+
+By rater
+------------------------------------------------------
+A: n=100, kappa=-0.2428, 95% CI=[-0.4769, -0.0088], observed=0.4800, expected=0.5816, AI+= 0.3800, Human+= 0.1600, Poor
+B: n=100, kappa=-0.3070, 95% CI=[-0.5388, -0.0753], observed=0.4500, expected=0.5792, AI+= 0.3800, Human+= 0.1700, Poor
+C: n=100, kappa=-0.1348, 95% CI=[-0.3572, 0.0876], observed=0.5000, expected=0.5594, AI+= 0.4100, Human+= 0.1700, Poor
+D: n=100, kappa=-0.2884, 95% CI=[-0.5078, -0.0691], observed=0.4300, expected=0.5576, AI+= 0.4100, Human+= 0.1800, Poor

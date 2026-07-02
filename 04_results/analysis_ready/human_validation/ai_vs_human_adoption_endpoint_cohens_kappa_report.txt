@@ -1,0 +1,15 @@
+AI vs Human Expert Agreement (Adoption Endpoint)
+========================================================
+
+AI endpoint: adoption_rate_failure
+Human endpoint: Hallucination_Rating
+Rows merged: 400 | Missing AI: 0 | Case_ID mismatches: 0
+
+Overall: n=400, kappa=0.3492, 95% CI=[0.1943, 0.5041], observed=0.8550, expected=0.7772, Fair
+Confusion matrix (AI rows x Human cols): [[321, 47], [11, 21]]
+
+By rater
+A: n=100, kappa=0.2315, 95% CI=[-0.1014, 0.5643], observed=0.8300, expected=0.7788, AI+= 0.0900, Human+= 0.1600, Fair
+B: n=100, kappa=0.6702, 95% CI=[0.4511, 0.8894], observed=0.9200, expected=0.7574, AI+= 0.1100, Human+= 0.1700, Substantial
+C: n=100, kappa=0.2624, 95% CI=[-0.0959, 0.6207], observed=0.8600, expected=0.8102, AI+= 0.0300, Human+= 0.1700, Fair
+D: n=100, kappa=0.2003, 95% CI=[-0.1233, 0.5240], observed=0.8100, expected=0.7624, AI+= 0.0900, Human+= 0.1800, Fair
